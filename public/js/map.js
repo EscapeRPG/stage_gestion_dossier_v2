@@ -5,6 +5,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const numInt = urlParams.get('numInt');
+    const dateParam = urlParams.get('date');
+
+    let techniciensDisponibles = [];
+    let codeAgence = '';
+
+    try {
+        const res = await fetch(`/api/intervention/${numInt}`);
+        const data = await res.json();
+        if (data.success && data.data) {
+            const inter = data.data;
+            codeAgence = inter.codeAgence;
+
+            techniciensDisponibles = Object.entries(inter.salaries).flatMap(([groupe, noms]) =>
+                noms.map(n => ({ groupe, nom: n }))
+            );
+        }
+    } catch (e) {
+        console.error('Erreur lors du chargement des techniciens :', e);
+    }
+
     const mapDiv = document.getElementById('map');
     const client = JSON.parse(mapDiv.dataset.client || 'null');
     const entreprise = JSON.parse(mapDiv.dataset.entreprise || 'null');
@@ -16,7 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return results.length > 0 ? [parseFloat(results[0].lat), parseFloat(results[0].lon)] : null;
     }
 
-    const dateParam = new URLSearchParams(window.location.search).get('date');
     let rdvs = [];
 
     try {
@@ -31,35 +52,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!rdvsByTech[rdv.technicien]) rdvsByTech[rdv.technicien] = [];
         rdvsByTech[rdv.technicien].push(rdv);
     });
-    const markers = [];
-    const colors = ['orange', 'purple', 'cyan', 'blue', 'magenta', 'yellow'];
+
     const techs = Object.keys(rdvsByTech);
+    const colors = ['orange', 'purple', 'cyan', 'blue', 'magenta', 'yellow'];
+    const markersMap = {};
+
     const entrepriseCoords = [entreprise.lat, entreprise.lon];
     const clientCoords = client ? await geocode(`${client.Adresse_Cli}, ${client.CP_Cli} ${client.Ville_Cli}`) : null;
 
     if (entrepriseCoords) {
         L.marker(entrepriseCoords, {
-            icon: L.icon({
-                iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                iconSize: [32, 32],
-            })
+            icon: L.icon({ iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png', iconSize: [32, 32] })
         }).addTo(map).bindPopup(`<b>${entreprise.nom}</b><br>${entreprise.adresse}`);
-        markers.push(entrepriseCoords);
     }
 
     if (clientCoords) {
         L.marker(clientCoords, {
-            icon: L.icon({
-                iconUrl: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
-                iconSize: [32, 32],
-            })
+            icon: L.icon({ iconUrl: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png', iconSize: [32, 32] })
         }).addTo(map).bindPopup(`<b>${client.Nom_Cli}</b><br>${client.Adresse_Cli}<br>${client.CP_Cli} ${client.Ville_Cli}`);
-        markers.push(clientCoords);
     }
 
-    rdvListDiv.innerHTML = '';
-    const allMarkerPromises = techs.map(async (tech, i) => {
-        const baseColor = colors[i % colors.length];
+    async function renderAllTechRoutes() {
+        rdvListDiv.innerHTML = '';
+        for (let i = 0; i < techs.length; i++) {
+            const tech = techs[i];
+            const baseColor = colors[i % colors.length];
+
+            await renderTechnicienRoute(tech, baseColor);
+        }
+    }
+
+    async function renderTechnicienRoute(tech, baseColor) {
+        if (markersMap[tech]) {
+            markersMap[tech].forEach(m => map.removeLayer(m));
+        }
+        markersMap[tech] = [];
+
+        const rdvsTech = rdvsByTech[tech] || [];
+        if (!rdvsTech.length) return;
+
         const rgbaColors = {
             orange: 'rgba(255, 165, 0, 0.1)',
             purple: 'rgba(128, 0, 128, 0.1)',
@@ -72,6 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const div = document.createElement('div');
         div.classList.add('tech');
+        div.dataset.tech = tech;
         div.style.maxHeight = '22px';
         div.style.backgroundColor = bgColor;
 
@@ -80,25 +112,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         sticker.style.backgroundColor = baseColor;
         div.appendChild(sticker);
 
-        const button = document.createElement('button');
-        button.textContent = '+';
-        button.addEventListener('click', () => {
-            if (button.textContent === '-') {
+        const btn = document.createElement('button');
+        btn.textContent = '+';
+        btn.addEventListener('click', () => {
+            if (btn.textContent === '-') {
                 div.style.maxHeight = '22px';
-                button.textContent = '+';
+                btn.textContent = '+';
             } else {
                 div.style.maxHeight = div.scrollHeight + 'px';
-                button.textContent = '-';
+                btn.textContent = '-';
             }
         });
-        div.appendChild(button);
+        div.appendChild(btn);
 
         const h3 = document.createElement('h3');
         h3.innerHTML = tech;
         h3.style.color = 'black';
         div.appendChild(h3);
 
-        const rdvCoordsList = await Promise.all(rdvsByTech[tech].map(async (rdv, idx) => {
+        const rdvCoordsList = await Promise.all(rdvsTech.map(async (rdv, idx) => {
             const rdvDiv = document.createElement('div');
             rdvDiv.classList.add('rdv-item');
             rdvDiv.innerHTML = `<b>${rdv.nom}</b><br>${rdv.adresse}<br><br><strong>${rdv.heure.slice(0,5)}</strong>`;
@@ -115,39 +147,81 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let routePoints = [entrepriseCoords];
         let remaining = [...validCoords];
-
-        let farthestIdx = remaining.reduce((maxIdx, cur, i) => distance(entrepriseCoords, cur) > distance(entrepriseCoords, remaining[maxIdx]) ? i : maxIdx, 0);
+        let farthestIdx = remaining.reduce((maxIdx, cur, i) =>
+            distance(entrepriseCoords, cur) > distance(entrepriseCoords, remaining[maxIdx]) ? i : maxIdx, 0);
         routePoints.push(remaining[farthestIdx]);
-        remaining.splice(farthestIdx,1);
-
+        remaining.splice(farthestIdx, 1);
         while (remaining.length) {
-            const last = routePoints[routePoints.length-1];
+            const last = routePoints[routePoints.length - 1];
             let nearestIdx = remaining.reduce((minIdx, cur, i) => distance(last, cur) < distance(last, remaining[minIdx]) ? i : minIdx, 0);
             routePoints.push(remaining[nearestIdx]);
-            remaining.splice(nearestIdx,1);
+            remaining.splice(nearestIdx, 1);
         }
-
         routePoints.push(entrepriseCoords);
 
         const url = `https://router.project-osrm.org/route/v1/driving/` +
-            routePoints.map(c => c[1]+','+c[0]).join(';') +
+            routePoints.map(c => c[1] + ',' + c[0]).join(';') +
             `?overview=full&geometries=geojson`;
+
         try {
             const res = await fetch(url);
             const data = await res.json();
             if (data.code === 'Ok') {
                 const route = data.routes[0];
-                L.geoJSON(route.geometry, { color: baseColor, weight: 4 }).addTo(map);
+                const line = L.geoJSON(route.geometry, { color: baseColor, weight: 4 }).addTo(map);
+                markersMap[tech].push(line);
 
-                routePoints.slice(1,-1).forEach((coord, idx) => {
-                    const rdv = rdvCoordsList[idx].rdv;
-                    L.marker(coord, {
-                        icon: L.divIcon({
-                            html: `<div style="background:${baseColor};border-radius:50%;width:24px;height:24px;color:white;text-align:center;line-height:24px;font-weight:bold;">${idx+1}</div>`,
+                for (let idx = 1; idx < routePoints.length - 1; idx++) {
+                    const coord = routePoints[idx];
+                    const rdv = rdvCoordsList[idx - 1].rdv;
+                    const marker = L.marker(coord, { icon: L.divIcon({
+                            html: `<div style="background:${baseColor};border-radius:50%;width:24px;height:24px;color:white;text-align:center;line-height:24px;font-weight:bold;">${idx}</div>`,
                             className: ''
-                        })
-                    }).addTo(map).bindPopup(`<b>${rdv.nom}</b><br>${rdv.adresse}<br><b>Technicien:</b> ${tech}<br><b>Ordre:</b> ${idx+1}`);
-                });
+                        })}).addTo(map);
+                    marker.rdv = rdv;
+
+                    marker.on('click', () => {
+                        const groupes = {};
+                        techniciensDisponibles.forEach(t => {
+                            if (!groupes[t.groupe]) groupes[t.groupe] = [];
+                            groupes[t.groupe].push(t.nom);
+                        });
+
+                        const optionsHtml = Object.entries(groupes).map(([groupe, noms]) => `
+                            <optgroup label="${groupe}">
+                                ${noms.map(n => `<option value="${n}">${n}</option>`).join('')}
+                            </optgroup>
+                        `).join('');
+
+                        const popupDiv = document.createElement('div');
+                        popupDiv.innerHTML = `
+                            <b>${rdv.nom}</b><br>${rdv.adresse}<br>
+                            <label for="selectTech">Réaffecter à :</label><br>
+                            <select id="selectTech" style="width: 100%; margin: 5px 0;">
+                                <option value="">-- Choisir un technicien --</option>
+                                ${optionsHtml}
+                            </select>
+                            <button id="btnReaffect" style="margin-top:5px; width:100%;">Valider</button>
+                        `;
+
+                        const popup = L.popup()
+                            .setLatLng(marker.getLatLng())
+                            .setContent(popupDiv)
+                            .openOn(map);
+
+                        popupDiv.querySelector('#btnReaffect').addEventListener('click', async () => {
+                            const newTech = popupDiv.querySelector('#selectTech').value;
+                            if (!newTech) {
+                                alert('Veuillez choisir un technicien');
+                                return;
+                            }
+                            await reassignTechnicien(rdv, newTech);
+                            map.closePopup();
+                        });
+                    });
+
+                    markersMap[tech].push(marker);
+                }
 
                 const distanceKm = (route.distance / 1000).toFixed(1);
                 const durationMin = Math.round(route.duration / 60);
@@ -156,20 +230,49 @@ document.addEventListener('DOMContentLoaded', async () => {
                 info.innerHTML = `<b>Distance:</b> ${distanceKm} km<br><b>Durée:</b> ${durationMin} min`;
                 div.appendChild(info);
             }
-        } catch(e) {
+        } catch (e) {
             console.error('Erreur OSRM', e);
         }
-    });
-
-    await Promise.all(allMarkerPromises);
-    if (markers.length) map.fitBounds(markers, {padding:[50,50]});
-
-    function distance([lat1, lon1], [lat2, lon2]){
-        const R=6371;
-        const dLat=(lat2-lat1)*Math.PI/180;
-        const dLon=(lon2-lon1)*Math.PI/180;
-        const a=Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-        const c=2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R*c;
     }
+
+    async function reassignTechnicien(rdv, newTech) {
+        try {
+            const res = await fetch(`/api/rdv/${rdv.num}/reassign`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ technicien: newTech })
+            });
+            const data = await res.json();
+            if (data.success) {
+                const oldTech = rdv.technicien;
+                rdv.technicien = newTech;
+
+                rdvsByTech[oldTech] = rdvsByTech[oldTech].filter(r => r.num !== rdv.num);
+                if (!rdvsByTech[newTech]) rdvsByTech[newTech] = [];
+                rdvsByTech[newTech].push(rdv);
+
+                await renderAllTechRoutes();
+                alert('Technicien réaffecté avec succès !');
+            } else {
+                alert('Erreur lors de la réaffectation');
+            }
+        } catch(e) {
+            console.error(e);
+            alert('Erreur réseau lors de la réaffectation');
+        }
+    }
+
+    function distance([lat1, lon1], [lat2, lon2]) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    await renderAllTechRoutes();
 });

@@ -50,4 +50,14 @@ class MapController extends Controller
 
         return view('map', compact('client', 'entreprise', 'date'));
     }
+
+    public function reassign(Request $request, $num)
+    {
+        $request->validate(['technicien' => 'required|string']);
+
+        DB::table('t_planning')->where('Num_Int', $num)
+            ->update(['Tech_RDV' => $request->technicien]);
+
+        return response()->json(['success' => true]);
+    }
 }
