@@ -23,5 +23,5 @@
         </div>
     </main>
 
-    <script src="{{ asset('js/map.js') }}"></script>
+    <script src="{{ asset('js/map/map.js') }}" type="module"></script>
 @endsection
