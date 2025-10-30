@@ -1,0 +1,47 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+main {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+}
+
+.map-container {
+    height: 100%;
+    width: 100%;
+}
+
+#sidebar {
+    width: 320px;
+    background: #f9f9f9;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+#map {
+    flex: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.rdv {
+    border-bottom: 1px solid #ccc;
+    padding: .5rem 0;
+    cursor: pointer;
+}
+
+.rdv:hover {
+    background: #eaf3ff;
+}
+
+.rdv strong {
+    display: block;
+}

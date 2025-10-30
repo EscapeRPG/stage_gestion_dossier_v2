@@ -1,0 +1,119 @@
+.hidden {
+    display: none !important;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-wrapper {
+    position: relative;
+    width: 80%;
+    margin: auto;
+
+    .close-btn {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        background: red;
+        color: white;
+        font-weight: bold;
+        font-size: 1.3em;
+        border-radius: 100%;
+        border: 2px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background: var(--h2-main-color);
+            color: red;
+        }
+    }
+}
+
+.modal-article {
+    background: var(--main-color);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--h2-main-color);
+
+    h2 {
+        background: var(--h2-main-color);
+        color: white;
+        margin: 0;
+        padding: .5em;
+    }
+}
+
+
+.actions-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-left: 20px;
+    margin: 0;
+    border: none;
+
+    div {
+        padding: 5px 10px;
+        margin: 10px;
+        border-bottom: 1px solid lightgrey;
+    }
+}
+
+.actions {
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin: 5px;
+    color: black;
+    border: none;
+
+    &.done {
+        border-left: 3px solid #62abff;
+        background: #cce6ff;
+    }
+
+    &.todo {
+        border-left: 3px solid #ffbb62;
+        background: #ffebd2;
+    }
+}
+
+.author {
+    text-align: right;
+    font-style: italic;
+    font-size: .8em;
+    color: grey;
+}
+
+span {
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-style: italic;
+    margin: 0 10px 0 5px;
+
+    &.valid {
+        border-left: 3px solid #2cbc2c;
+        background: #d2ffd2;
+        color: #2cbc2c;
+    }
+
+    &.not-valid {
+        border-left: 3px solid red;
+        background: #ffcece;
+        color: red;
+    }
+}

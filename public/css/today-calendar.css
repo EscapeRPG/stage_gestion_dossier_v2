@@ -1,0 +1,207 @@
+.today-calendar, .next-calendar, .planning-calendar {
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0 !important;
+    border-radius: 10px;
+    overflow: auto;
+    border: 1px solid var(--nav-main-color) !important;
+    font-size: 14px;
+    margin: 0 auto !important;
+    box-shadow: var(--box-shadow);
+    scrollbar-color: transparent transparent;
+
+    &:hover {
+        scrollbar-color: var(--h2-main-color) transparent;
+    }
+
+    .horaire {
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        border: none;
+        border-right: 1px solid var(--nav-main-color);
+        background: #f6fbff;
+
+        a {
+            text-decoration: none;
+        }
+
+        p {
+            margin: 0;
+            padding: 1em .5em;
+            background: var(--horaire-background);
+            color: var(--nav-color);
+            font-size: 1em;
+            font-weight: bold;
+            text-shadow: 0 0 2px black;
+        }
+
+        &:last-child {
+            border: none;
+        }
+
+        .actions {
+            position: relative;
+            cursor: pointer;
+            min-width: 100px;
+            width: calc(100% - .6em - 13px);
+            box-shadow: var(--box-shadow);
+
+            /*
+            &.prio {
+                padding-right: 40px;
+                width: calc(100% - .6em - 53px);
+            }
+            */
+
+            &:hover {
+                .dossier {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    .dossier, .rdv-draggable .rdv, .tache-draggable .tache {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .8em;
+        font-weight: bold;
+        transition: width .3s ease-in-out 0s;
+        text-align: center;
+        border-radius: 5px;
+
+        &.rdv {
+            background: #62abff;
+        }
+
+        &.tache {
+            background: #ffbb62;
+        }
+    }
+
+    .passed {
+        background: #e8e8e8;
+        border-right: 1px solid #b1b1b1;
+
+        p {
+            background: var(--horaire-passed);
+        }
+    }
+
+    .now {
+        background: #ddffdd;
+
+        p {
+            background: var(--horaire-now);
+        }
+    }
+}
+
+.next-calendar {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 10px;
+    background: var(--time-slot);
+}
+
+.planning-calendar {
+    display: grid;
+    grid-template-columns: repeat(19, 1fr);
+    font-size: 12px;
+    margin-bottom: 1em !important;
+    padding-bottom: 10px !important;
+
+    .calendar-technicien {
+        p {
+            margin: 0;
+            padding: 1em .5em;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+        }
+    }
+
+    .vacant {
+        width: 80%;
+        height: 80%;
+        margin: auto;
+        background: #e8e8e8;
+        border-radius: 5px;
+        border: 2px dotted #b1b1b1;
+        position: relative;
+    }
+
+    .rdv-draggable, .tache-draggable {
+        width: calc(100% - 3px);
+        height: 100%;
+        border-radius: 5px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            .rdv {
+                width: 100%;
+                background: #62abff;
+            }
+
+            .tache {
+                width: 100%;
+                background: #ffbb62;
+            }
+        }
+    }
+
+    .rdv-draggable {
+        background: #cce6ff;
+        border-left: 3px solid #62abff;
+    }
+
+    .tache-draggable {
+        background: #ffebd2;
+        border-left: 3px solid #ffbb62;
+    }
+
+    .drag-hover-vacant {
+        filter: brightness(90%);
+    }
+}
+
+.event-dossier-detail {
+    width: 80%;
+
+    .actions-container {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+
+        .action {
+            width: fit-content;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: black;
+            border: none;
+
+            &.todo {
+                border-left: 3px solid #ffbb62;
+                background: #ffebd2;
+            }
+        }
+    }
+}

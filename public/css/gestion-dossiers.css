@@ -1,0 +1,327 @@
+.main-container {
+    font-size: 14px;
+    border: 1px solid var(--h2-main-color);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f6fbff;
+    box-shadow: var(--box-shadow);
+
+    ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0 2px 0;
+
+            .valid, .not-valid {
+                font-style: italic;
+            }
+
+            .valid {
+                color: #2cbc2c;
+            }
+
+            .not-valid {
+                color: red;
+            }
+        }
+    }
+}
+
+.dossier-detail-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px auto;
+}
+
+.info-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.container, .planning-container {
+    h2 {
+        text-align: center;
+        background: var(--h2);
+        color: white;
+        margin: 0;
+        padding: .5em;
+        position: relative;
+        font-size: 1.1em;
+        text-shadow: 0 0 2px black;
+        transition: all .5s ease-in;
+
+        &.closed {
+            filter: grayscale(1) brightness(120%);
+            color: black;
+            text-shadow: none;
+        }
+
+        button {
+            position: absolute;
+            top: calc(50% - 10px);
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 0;
+            background: lightgrey;
+            margin: 0;
+            padding: 0;
+            color: black;
+        }
+    }
+
+    p {
+        text-align: left;
+    }
+
+    article {
+        width: 100%;
+        height: fit-content;
+        color: var(--color);
+        background: var(--dossier-containers-color);
+        border: 1px solid var(--h2-main-color);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: var(--box-shadow);
+
+        .traitement-content {
+            padding: 0 1em;
+            transition: max-height .5s ease-in;
+            max-height: 0;
+        }
+
+        .content {
+            padding: 0 1em;
+            overflow: hidden;
+            transition: max-height .5s ease-in;
+
+            input, select {
+                border-radius: 5px;
+                width: fit-content;
+                height: 30px;
+                border: 1px solid black;
+            }
+
+            input {
+                padding: 0 1em;
+            }
+
+            select {
+                padding: 0 5px;
+                height: 32px;
+
+                optgroup {
+                    color: var(--h2-main-color);
+                }
+
+                option {
+                    color: black;
+                }
+            }
+
+            .checkbox {
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    .detail {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 10px 0;
+    }
+}
+
+.planning-container {
+    width: calc(35% - 20px);
+}
+
+.container {
+    width: 65%;
+
+    .traitement {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+        article {
+            overflow: clip;
+            margin-top: 1em;
+
+            .detail-etat {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                padding: 1em 0;
+
+                label {
+                    width: fit-content;
+                    white-space: nowrap;
+                }
+
+                input:not([type="date"]) {
+                    width: 100%;
+                }
+            }
+
+            .prioritaire {
+                font-style: italic;
+                color: red;
+                gap: 5px;
+
+                input {
+                    height: auto;
+                }
+            }
+        }
+    }
+
+    .content {
+        max-height: 0;
+    }
+}
+
+.show {
+    transition: max-height .5s ease-in;
+}
+
+.histo-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+input {
+    text-align: center;
+    border: var(--button-border);
+
+    &#commentaire-histo {
+        text-align: left;
+    }
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+fieldset {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid var(--h2-main-color);
+
+    .checkBtn {
+        display: flex;
+        align-items: center;
+        border: 1px solid #95ccf3;
+        margin: 2px;
+        padding: .5em;
+        border-radius: 5px;
+        gap: 5px;
+
+        label {
+            text-align: left;
+        }
+    }
+
+    .important {
+        color: red;
+        font-style: italic;
+    }
+}
+
+.commentaire-histo {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left;
+    margin: 10px auto;
+
+    input {
+        width: calc(100% - 2em - 2px) !important;
+    }
+}
+
+textarea {
+    width: calc(100% - 6px);
+    border: var(--button-border);
+    border-radius: 5px;
+}
+
+.date-traitement {
+    text-align: center;
+    padding: 1em;
+    border: 1px solid black;
+    display: block;
+    margin: 10px auto;
+}
+
+.info-rdv {
+    cursor: pointer;
+    padding: .2em .6em;
+    margin-bottom: 2px;
+    background: #3da5ef;
+    border-radius: 100%;
+    border: 2px solid white;
+    outline: 1px solid black;
+    color: white;
+
+    &:hover {
+        background: black;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .planning-container {
+        width: calc(50% - 20px);
+    }
+
+    .container {
+        width: 50%;
+    }
+
+    .prioritaire {
+        flex-wrap: wrap;
+        font-size: 10px;
+
+        label {
+            width: 100% !important;
+            text-align: center !important;
+        }
+    }
+
+    .traitement {
+        flex-direction: column !important;
+        gap: 0 !important;
+
+        article {
+            overflow: clip;
+
+            &:first-child {
+                margin-top: 1em;
+            }
+
+            &:last-child {
+                margin-top: 0;
+                margin-bottom: 1em;
+            }
+        }
+    }
+}

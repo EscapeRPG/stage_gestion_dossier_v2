@@ -1,0 +1,29 @@
+.errors {
+    text-align: center;
+    color: var(--error-color);
+}
+
+.success {
+    text-align: center;
+    color: var(--success-color);
+}
+
+.no-secret, .success-container {
+    width: 60%;
+    margin: 20px auto;
+    padding: 2em;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.no-secret {
+    background: var(--error-modal-bg);
+    border: 1px solid var(--error-color);
+    color: var(--error-color);
+}
+
+.success-container {
+    background: var(--success-modal-bg);
+    border: 1px solid var(--success-color);
+    color: var(--success-color);
+}

@@ -1,0 +1,62 @@
+.suivi-dossiers {
+    h2 {
+        width: 100%;
+        border-bottom: 1px solid;
+    }
+}
+
+.planning-day {
+    div {
+        padding: 5px 10px;
+        margin: 10px;
+        border-bottom: 1px solid lightgrey;
+    }
+
+    p {
+        text-align: center;
+    }
+
+    .actions {
+        width: fit-content;
+        padding: .7em .3em;
+        border-radius: 5px;
+        margin: 5px;
+        color: black;
+        border: none;
+        text-align: left;
+
+        &.rdv {
+            border-left: 3px solid #62abff;
+            background: #cce6ff;
+        }
+
+        &.tache {
+            border-left: 3px solid #ffbb62;
+            background: #ffebd2;
+        }
+    }
+
+    .dossier-urgent {
+        color: white;
+        font-size: 9px;
+        font-weight: bold;
+        font-style: italic;
+        background: #dc4040;
+        border-radius: 100%;
+        border: 2px solid white;
+        outline: 1px solid #dc4040;
+        position: absolute;
+
+        /*
+        top: calc(50% - 10px);
+        right: 5px;
+        */
+
+        top: -7px;
+        right: -10px;
+
+        margin: 0;
+        padding: 3px 6px;
+        pointer-events: none;
+    }
+}

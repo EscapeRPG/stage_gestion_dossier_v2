@@ -1,0 +1,82 @@
+:root {
+    --error-color: red;
+    --error-modal-bg: #f8bdbd;
+    --success-modal-bg: #c3f8bd;
+    --success-color: limegreen;
+    --nav-main-color: #68b8f6;
+    --contrast-color: #68b8f6;
+    --nav-color: white;
+    --nav-color-hover: #005a97;
+    --main-color: #f6faff;
+    --color: black;
+    --readonly-color: #373737;
+    --h1-color: #5d96d1;
+    --horaire-background: linear-gradient(#4d85cd 5%, #5db1ea 70%, #3768a8);
+    --sidebar: linear-gradient(#274e83 5%, #37619a 70%, #204271);
+    --horaire-passed: linear-gradient(#818181 5%, #8f8f8f 70%, #676767);
+    --horaire-now: linear-gradient(#3fb564 5%, #4ed16d 70%, #34985c);
+    --time-slot: linear-gradient(#bee0ff 5%, #e3f4ff 70%, #b8dfff);
+    --selected: linear-gradient(#d37f11 5%, orange 70%, #bf6c00);
+    --h2: radial-gradient(#5ba2d1 30%, #37619a 70%, #204271);
+    --box-shadow: 2px 2px 5px rgba(44, 113, 163, .8);
+    --calendar-sidebar: #5d96d1;
+    --h2-main-color: #5ba2d1;
+    --calendar-color-hover: #8fd8ff;
+    --altered-color: white;
+    --form-color: black;
+    --containers-color: white;
+    --dossier-containers-color: white;
+    --button-main-color-hover: white;
+    --button-color: white;
+    --button-color-hover: black;
+    --button-border: 1px inset grey;
+}
+
+.dark-mode {
+    --nav-main-color: #1e2c37;
+    --contrast-color: #3f5f7c;
+    --nav-color-hover: #4f9bd1;
+    --main-color: linear-gradient(150deg, #171e22 60%, #0d1113);
+    --color: #dddddd;
+    --h2-main-color: #1f6fa6;
+    --calendar-color-hover: black;
+    --altered-color: #68b8f6;
+    --form-color: #cccccc;
+    --containers-color: #11171b;
+    --dossier-containers-color: #2c3337;
+    --button-main-color-hover: white;
+    --button-color: white;
+    --button-color-hover: black;
+    --button-border: 1px inset grey;
+}
+
+* {
+    scrollbar-color: var(--h2-main-color) transparent;
+    scrollbar-width: thin;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--main-color);
+    color: var(--color);
+    margin: 0;
+    transition: all .3s ease;
+}
+
+.no-transition {
+    transition: none !important;
+}
+
+main {
+    width: calc(95% - 4em);
+    margin: auto;
+    padding: 2em;
+
+    h1, h2, h3 {
+        color: var(--h1-color);
+    }
+
+    h3 {
+        text-align: center;
+    }
+}

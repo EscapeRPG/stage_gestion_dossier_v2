@@ -1,0 +1,115 @@
+form {
+    color: var(--form-color);
+
+    p {
+        text-align: center;
+    }
+
+    input, select {
+        padding: 1em .5em;
+        border-radius: 10px;
+    }
+
+    select:focus {
+        border-radius: 10px 10px 0 0;
+    }
+
+    input:focus {
+        outline-color: var(--contrast-color);
+    }
+
+    button {
+        width: fit-content;
+        margin: 20px auto;
+        padding: 1em 2em;
+        border-radius: 10px;
+        background: var(--horaire-background);
+        border: var(--button-border);
+        color: white;
+        text-shadow: 0 0 2px black;
+        font-weight: bold;
+
+        &:hover {
+            cursor: pointer;
+            background: var(--button-main-color-hover);
+            color: var(--button-color-hover);
+            text-shadow: none;
+        }
+    }
+
+    button[type="button"] {
+        text-shadow: none;
+    }
+
+    a {
+        text-align: right;
+        color: var(--error-color);
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+            color: var(--nav-color-hover);
+            text-decoration: underline;
+        }
+    }
+}
+
+.login {
+    width: 500px;
+    margin: auto;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--containers-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+
+    div {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.dossier-detail-form {
+    text-align: center;
+    margin: 0 10px;
+
+    .save-btn {
+    background: var(--horaire-now);
+    color: white;
+    margin: 10px auto;
+
+    &:hover {
+        filter: brightness(0.8) contrast(1.6);
+        text-shadow: 0 0 2px black;
+    }
+}
+}
+
+.back-form {
+    text-align: right;
+
+    button {
+        margin: 0 0 10px 0;
+    }
+}
+
+.dossier-search {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+
+    input {
+        min-width: 300px;
+        text-align: center;
+    }
+
+    button {
+        width: fit-content;
+        margin: 0;
+    }
+}

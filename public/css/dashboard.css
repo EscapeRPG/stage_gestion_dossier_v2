@@ -1,0 +1,88 @@
+.dashboard-container {
+    width: 90%;
+    margin: 20px auto;
+    background: var(--containers-color);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+
+    .id-session {
+        font-size: .7em;
+        color: grey;
+    }
+
+    h2 {
+        color: var(--contrast-color);
+        border-bottom: 1px solid var(--contrast-color);
+    }
+
+    .infos {
+        width: 100%;
+        margin: 20px auto;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        overflow: hidden;
+
+        .infos-row {
+            display: flex;
+
+            p:first-child {
+                width: 30%;
+                background: var(--contrast-color);
+                font-weight: bold;
+                color: var(--altered-color);
+                border-bottom: 1px solid var(--containers-color);
+            }
+
+            p {
+                width: 100%;
+                margin: 0;
+                padding: 20px;
+                display: inline-block;
+                border-bottom: 1px solid var(--contrast-color);
+            }
+
+            &:last-child p {
+                border: none;
+            }
+        }
+    }
+
+    .applications {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 90%;
+        margin: auto;
+
+        button {
+            padding: 2em 1em;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            transition: all .3s ease;
+            width: 100px;
+            height: 100px;
+            margin: 0;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(1.1);
+            }
+
+            &.blue {
+                background: #348c98;
+            }
+
+            &.green {
+                background: #349834;
+            }
+
+            &.red {
+                background: #b83535;
+            }
+        }
+    }
+}
