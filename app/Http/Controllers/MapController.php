@@ -31,8 +31,23 @@ class MapController extends Controller
         return response()->json($rdvs);
     }
 
-    public function generateMap()
+    public function generateMap(Request $request)
     {
-        return view('map');
+        $numInt = $request->query('numInt');
+        $date = $request->query('date');
+
+        $client = DB::table('t_interventions')
+            ->where('NumInt', $numInt)
+            ->select('Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli')
+            ->first();
+
+        $entreprise = [
+            'nom' => 'Maintronic',
+            'adresse' => 'Parc d\'activité du Moulin, 152 Rue François René de Châteaubriand Bat D4, 44470 Carquefou',
+            'lat' => '47.30635848249004',
+            'lon' => '-1.4814458294525863'
+        ];
+
+        return view('map', compact('client', 'entreprise', 'date'));
     }
 }

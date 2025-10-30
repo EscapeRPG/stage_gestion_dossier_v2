@@ -16,7 +16,10 @@
         </div>
 
         <div class="map-container">
-            <div id="map"></div>
+            <div id="map"
+                 data-client='@json($client)'
+                 data-entreprise='@json($entreprise)'>
+            </div>
         </div>
     </main>
 

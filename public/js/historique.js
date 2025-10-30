@@ -1,6 +1,5 @@
 const historique = document.getElementById('histo'),
     numInt = document.getElementById('numInt').value,
-    modalContent = document.querySelector('.modal-content'),
     formattedDate = new Intl.DateTimeFormat('fr-FR', {
         day: 'numeric', month: 'long', year: 'numeric'
     });
@@ -157,7 +156,6 @@ function generateHistoDetail(item, li) {
     }
 
     if (item.Date_RDV && item.Heure_RDV) {
-        console.log(item);
         let valid = '';
         if (item.Valid_RDV === 'O') {
             valid = '<div class="rdv valid">Validé</div>';
@@ -173,102 +171,4 @@ function generateHistoDetail(item, li) {
         div.appendChild(innerDiv);
         li.appendChild(div);
     }
-}
-
-function showHistoDetailOLD(item) {
-    modal.classList.remove('hidden');
-
-    let div, innerDiv, actionDiv, etat = false, aFaire = false;
-
-    div = document.createElement('div');
-    div.className = 'author';
-    div.innerHTML = `Le ${formattedDate.format(new Date(item.Date_MAJ))} à ${item.Heure_MAJ.slice(0, 5)}, par ${item.Code_Sal}.`;
-    modalContent.appendChild(div);
-
-    item.reponses.forEach((reponse) => {
-        if (reponse.Type === 'État') {
-            etat = true;
-        }
-    });
-
-    if (etat) {
-        div = document.createElement('div');
-        div.innerHTML = `<strong>Actions effectuées :</strong>`;
-        innerDiv = document.createElement('div');
-        innerDiv.className = 'actions-container';
-        item.reponses.forEach((reponse) => {
-            if (reponse.Type === 'État') {
-                actionDiv = document.createElement('div');
-                actionDiv.classList.add('actions');
-                actionDiv.classList.add('done');
-                actionDiv.innerHTML = reponse.Question;
-                innerDiv.appendChild(actionDiv);
-            }
-        });
-        div.appendChild(innerDiv);
-        modalContent.appendChild(div);
-    }
-
-    item.reponses.forEach((reponse) => {
-        if (reponse.Type === 'À Faire') {
-            aFaire = true;
-        }
-    });
-
-    if (aFaire) {
-        let rdv = 'À Faire';
-
-        if (item.AFaire_Date && item.AFaire_Heure) {
-            rdv = `À Faire le ${formattedDate.format(new Date(item.AFaire_Date))} à ${item.AFaire_Heure.slice(0, 5)}`;
-        }
-
-        div = document.createElement('div');
-        div.innerHTML = `<strong>${rdv} :</strong>`;
-        innerDiv = document.createElement('div');
-        innerDiv.className = 'actions-container';
-        item.reponses.forEach((reponse) => {
-            if (reponse.Type === `À Faire`) {
-                actionDiv = document.createElement('div');
-                actionDiv.classList.add('actions');
-                actionDiv.classList.add('todo');
-                actionDiv.innerHTML = reponse.Question;
-                innerDiv.appendChild(actionDiv);
-            }
-        })
-        div.appendChild(innerDiv);
-        modalContent.appendChild(div)
-    }
-
-    if (item.Comm_Detail) {
-        div = document.createElement('div');
-        div.innerHTML = `<strong>Commentaire :</strong>`;
-        innerDiv = document.createElement('div');
-        innerDiv.className = 'actions-container';
-        innerDiv.innerHTML = item.Comm_Detail;
-        div.appendChild(innerDiv);
-        modalContent.appendChild(div);
-    }
-
-    if (item.Date_RDV) {
-        let valid = '';
-        if (item.Valid_RDV === 'O') {
-            valid = '<span class="valid">Validé</span>';
-        } else {
-            valid = '<span class="not-valid">Non validé</span>';
-        }
-
-        div = document.createElement('div');
-        div.innerHTML = `<strong>Rendez-vous :</strong>`;
-        innerDiv = document.createElement('div');
-        innerDiv.className = 'actions-container';
-        innerDiv.innerHTML = `${valid}Le ${formattedDate.format(new Date(item.Date_RDV))} à ${item.Heure_RDV.slice(0, 5)}`;
-        div.appendChild(innerDiv);
-        modalContent.appendChild(div);
-    }
-}
-
-function closeModal() {
-    modal.classList.add('hidden');
-
-    modalContent.innerHTML = '';
 }

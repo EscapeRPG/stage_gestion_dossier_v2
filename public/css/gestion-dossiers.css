@@ -148,6 +148,42 @@
 
 .planning-container {
     width: calc(35% - 20px);
+
+    h3 {
+        position: relative;
+
+        .btn-map {
+            position: absolute;
+            right: 10px;
+            margin: 0;
+            padding: 0;
+            background: none;
+            border: none;
+
+            &::after {
+                content: attr(data-tooltip);
+                position: fixed;
+                bottom: auto;
+                top: var(--tooltip-top, 0px);
+                left: calc(var(--tooltip-left, 0px));
+                transform: translate(-50%, -100%);
+                background: white;
+                color: black;
+                padding: 5px 10px;
+                border: 1px solid black;
+                border-radius: 5px;
+                opacity: 0;
+                white-space: nowrap;
+                pointer-events: none;
+                z-index: 9999;
+                transition: opacity 0.2s ease;
+            }
+
+            &:hover::after {
+                opacity: 1;
+            }
+        }
+    }
 }
 
 .container {
