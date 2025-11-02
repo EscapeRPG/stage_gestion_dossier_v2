@@ -18,17 +18,16 @@ export async function renderAllTechRoutes(map, rdvs, techniciensDisponibles, ent
     if (entrepriseCoords) {
         L.marker(entrepriseCoords, {
             icon: L.icon({ iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png', iconSize: [32, 32] })
-        }).addTo(map).bindPopup(`<b>Entreprise</b>`);
+        }).addTo(map).bindPopup(`<b>Maintronic</b><br>${entrepriseCoords.adresse}`);
     }
 
     if (clientCoords) {
         L.marker(clientCoords, {
             icon: L.icon({ iconUrl: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png', iconSize: [32, 32] })
-        }).addTo(map).bindPopup(`<b>Client</b>`);
+        }).addTo(map).bindPopup(`<b>Client : ${clientCoords.nom}</b><br>${clientCoords.adresse}<br>${clientCoords.CPVille}`);
     }
 
     for (let i = 0; i < techs.length; i++) {
-        console.log('prout');
         const tech = techs[i];
         const baseColor = COLORS[i % COLORS.length];
         await renderTechnicienRoute(map, rdvListDiv, rdvsByTech, tech, baseColor, techniciensDisponibles, entrepriseCoords, markersMap);
@@ -88,7 +87,7 @@ async function renderTechnicienRoute(map, rdvListDiv, rdvsByTech, tech, baseColo
     const validCoords = rdvCoordsList.filter(x => x.coords !== null).map(x => x.coords);
     if (!validCoords.length) return;
 
-    const routePoints = calcRouteOrder(entrepriseCoords, validCoords);
+    const routePoints = calcRouteOrder([entrepriseCoords.lat, entrepriseCoords.lon], validCoords);
 
     const osrmUrl = `https://router.project-osrm.org/route/v1/driving/` +
         routePoints.map(c => c[1] + ',' + c[0]).join(';') +

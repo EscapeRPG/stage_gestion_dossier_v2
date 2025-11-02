@@ -34,10 +34,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Erreur chargement RDV', e);
     }
 
-    const entrepriseCoords = entreprise ? [entreprise.lat, entreprise.lon] : null;
+    const entrepriseCoords = entreprise ? {'lat': entreprise.lat, 'lon': entreprise.lon, 'adresse': entreprise.adresse} : null;
     const clientCoords = client
         ? await geocode(`${client.Adresse_Cli}, ${client.CP_Cli} ${client.Ville_Cli}`)
         : null;
-
+    clientCoords['nom'] = client.Nom_Cli;
+    clientCoords['adresse'] = client.Adresse_Cli;
+    clientCoords['CPVille'] = client.CP_Cli + ' ' + client.Ville_Cli;
     await renderAllTechRoutes(map, rdvs, techniciensDisponibles, entrepriseCoords, clientCoords);
 });
