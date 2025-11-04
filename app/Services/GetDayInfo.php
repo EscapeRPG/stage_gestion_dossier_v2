@@ -24,7 +24,9 @@ class GetDayInfo
                 'Adresse_Cli',
                 'Ville_Cli',
                 'Num_Tel_Cli',
-                'Mail_Cli'
+                'Mail_Cli',
+                'Marque',
+                'Type_App'
             )
             ->get()
             ->map(fn($item) => (object)[
@@ -42,6 +44,8 @@ class GetDayInfo
                 'Ville_Cli' => $item->Ville_Cli,
                 'Num_Tel_Cli' => $item->Num_Tel_Cli,
                 'Mail_Cli' => $item->Mail_Cli,
+                'Marque' => $item->Marque,
+                'Type_App' => $item->Type_App
             ]);
 
         $histos = DB::table('t_histoappels')

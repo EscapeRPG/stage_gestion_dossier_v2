@@ -1,6 +1,6 @@
 <article>
     <h2>
-        Traitement
+        #{{ $intervention->NumInt }} - Traitement
         <button type="button" id="traitement-btn">-</button>
     </h2>
 
@@ -15,6 +15,16 @@
                 <div class="detail-etat">
                     <label for="nomCli">Client</label>
                     <input type="text" name="nomCli" id="nomCli" value="{{ $intervention->Nom_Cli }}">
+                </div>
+
+                <div class="detail-etat">
+                    <label for="marque">Marque</label>
+                    <input type="text" name="marque" id="marque" value="{{ $intervention->Marque }}">
+                </div>
+
+                <div class="detail-etat">
+                    <label for="appareil">Type</label>
+                    <input type="text" name="appareil" id="appareil" value="{{ $intervention->Type_App }}">
                 </div>
 
                 <fieldset>

@@ -93,7 +93,9 @@ export function initPlanning() {
             createLI(`<strong>Technicien affecté :</strong> ${item.Tech_RDV || 'N/A'}`),
             createLI(`<strong>Client :</strong> ${item.Nom_Cli || 'N/A'}`),
             createLI(`<strong>Adresse :</strong> ${item.Adresse_Cli || ''}, ${item.CP_Cli || ''} ${item.Ville_Cli || ''}`),
-            createLI(`<strong>Contact :</strong> ${item.Mail_Cli || '—'} / ${item.Num_Tel_Cli || '—'}`)
+            createLI(`<strong>Contact :</strong> ${item.Mail_Cli || '—'} / ${item.Num_Tel_Cli || '—'}`),
+            createLI(`<strong>Marque :</strong> ${item.Marque || '—'}`),
+            createLI(`<strong>Type d'appareil :</strong> ${item.Type_App || '—'}`),
         );
     }
 
@@ -157,7 +159,7 @@ export function initPlanning() {
 
             const div = document.createElement('div');
             div.className = 'calendar-technicien';
-            div.innerHTML = '<p>Technicien</p>';
+            div.innerHTML = '<p>Tech</p>';
             calendar.appendChild(div);
 
             for (let i = 9; i < 18; i++) {

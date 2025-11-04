@@ -12,6 +12,8 @@ class SaveDossier
         $validated = $request->validate([
             'numInt' => ['required', 'string', 'max:20', 'regex:/^[A-Z0-9]{4}-\d{4}-\d{5}$/i'],
             'nomCli' => ['required', 'string', 'max:50'],
+            'marque' => ['required', 'string', 'max:50'],
+            'appareil' => ['required', 'string', 'max:50'],
             'commentaire-histo' => ['nullable', 'string', 'max:60'],
             'commentaire-detail-histo' => ['nullable', 'string', 'max:250'],
             'reaffectation-dossier' => ['nullable', 'string', 'max:5'],
@@ -33,6 +35,15 @@ class SaveDossier
         $heure = now()->format('H:i:s');
 
         DB::transaction(function () use ($validated, $codeSal, $agence, $date, $heure, $numInt) {
+            if (!empty($validated['marque']) || !empty($validated['appareil'])) {
+                DB::table('t_interventions')
+                    ->where('numInt', $numInt)
+                    ->update([
+                        'Marque' => $validated['marque'],
+                        'Type_App' => $validated['appareil'],
+                    ]);
+            }
+
             DB::table('t_histoappels')->insert([
                 'Num_Int' => $numInt,
                 'Code_Sal' => $codeSal,
@@ -71,7 +82,7 @@ class SaveDossier
 
             if (!empty($validated['dateRDV']) && !empty($validated['timeRDV']) && !empty($validated['tech-rdv'])) {
                 $client = DB::table('t_interventions')
-                    ->select('Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli', 'Num_Tel_Cli', 'Mail_Cli')
+                    ->select('Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli', 'Num_Tel_Cli', 'Mail_Cli', 'Marque', 'Type_App')
                     ->where('NumInt', $numInt)
                     ->first();
 
@@ -93,6 +104,8 @@ class SaveDossier
                         'Ville_Cli' => $client->Ville_Cli,
                         'Num_Tel_Cli' => $client->Num_Tel_Cli,
                         'Mail_Cli' => $client->Mail_Cli,
+                        'Marque' => $client->Marque,
+                        'Type_App' => $client->Type_App,
                     ]);
                 }
             }

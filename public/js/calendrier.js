@@ -41,6 +41,7 @@ export function initCalendar(fetchDayData, removeRDVDetail) {
             button.innerHTML = `
                 ${d.toLocaleDateString('fr-FR', {weekday: 'short'}).replace('.', '')}
                 <span class="date">${d.getDate()}</span>
+                <br><br>
                 ${shortMonthNames[d.getMonth()]}
             `;
 

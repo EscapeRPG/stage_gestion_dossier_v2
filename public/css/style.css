@@ -12,12 +12,12 @@
     --readonly-color: #373737;
     --h1-color: #5d96d1;
     --horaire-background: linear-gradient(#4d85cd 5%, #5db1ea 70%, #3768a8);
-    --sidebar: linear-gradient(#274e83 5%, #37619a 70%, #204271);
+    --sidebar: linear-gradient(#3e679f 5%, #507bb4 70%, #33588c);
     --horaire-passed: linear-gradient(#818181 5%, #8f8f8f 70%, #676767);
     --horaire-now: linear-gradient(#3fb564 5%, #4ed16d 70%, #34985c);
     --time-slot: linear-gradient(#bee0ff 5%, #e3f4ff 70%, #b8dfff);
     --selected: linear-gradient(#d37f11 5%, orange 70%, #bf6c00);
-    --h2: radial-gradient(#5ba2d1 30%, #37619a 70%, #204271);
+    --h2: radial-gradient(#9ecbe7 30%, #7a9dcc 70%, #436490);
     --box-shadow: 2px 2px 5px rgba(44, 113, 163, .8);
     --calendar-sidebar: #5d96d1;
     --h2-main-color: #5ba2d1;

@@ -13,8 +13,6 @@
 
 @section('content')
     <main>
-        @include('includes.info-bar', ['intervention' => $intervention])
-
         <div class="main-container">
             @include('includes.calendrier')
 

@@ -2,6 +2,22 @@
     <h2>Planifier un rendez-vous</h2>
 
     <div class="content planning">
+        <div id="existing-rdv" class="">
+            @foreach ($intervention->historique as $histo)
+                @if ($histo->Date_RDV)
+                    @php ([$year, $month, $day] = explode('-', $histo->Date_RDV))
+                    @php ($date = implode('/', [$day, $month, $year]))
+
+                    <p>
+                        Rendez-vous <strong>{{ $histo->Valid_RDV === 'O' ? '' : 'non' }} validé</strong>
+                        le <strong>{{ $date }}</strong>
+                        à <strong>{{ substr($histo->Heure_RDV, 0, 5) }}</strong>
+                        pour <strong>{{ $histo->Tech_RDV ?? '/ Technicien non affecté /' }}</strong>.
+                    </p>
+                @endif
+            @endforeach
+        </div>
+
         <div class="detail">
             <input type="date" name="dateRDV" id="dateRDV">
 
