@@ -73,7 +73,7 @@ class DossiersDashboard
             ]);
         }
 
-        return $timelineToday->sortBy('heure')->values();
+        return $timelineToday->sortBy('heure');
     }
 
     public function getToDoNext($dossiers): Collection
@@ -149,8 +149,7 @@ class DossiersDashboard
                     $item->date ?? '9999-99-99',
                     $item->heure ?? '99:99:99'
                 );
-            })
-            ->values();
+            });
     }
 
     public function paginateCollection(Collection $items, int $perPage, int $page, array $options = []): LengthAwarePaginator

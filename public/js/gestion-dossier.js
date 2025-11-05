@@ -14,51 +14,50 @@ document.addEventListener('DOMContentLoaded', () => {
         year = date.getFullYear(),
         today = `${year}-${month}-${day}`;
     planning.fetchDayData(today);
-});
 
-const saveBtn = document.getElementById('save-btn'),
-    returnBtn = document.getElementById('return'),
-    existingRdv = document.getElementById('existing-rdv'),
-    rdvDate = document.getElementById('dateRDV'),
-    rdvHeure = document.getElementById('timeRDV'),
-    form = document.querySelector('form');
+    const saveBtn = document.getElementById('save-btn'),
+        returnBtn = document.getElementById('return'),
+        existingRdv = document.getElementById('existing-rdv'),
+        rdvDate = document.getElementById('dateRDV'),
+        rdvHeure = document.getElementById('timeRDV'),
+        form = document.querySelector('form');
 
-if (saveBtn && existingRdv && rdvDate && rdvHeure) {
-    saveBtn.addEventListener('click', (event) => {
-        if (rdvDate.value && rdvHeure.value) {
-            const date = existingRdv.dataset.date,
-                time = existingRdv.dataset.heure,
-                tech = existingRdv.dataset.tech,
-                valid = existingRdv.dataset.valid;
+    if (saveBtn && existingRdv && rdvDate && rdvHeure) {
+        saveBtn.addEventListener('click', (event) => {
+            if (rdvDate.value && rdvHeure.value) {
+                const date = existingRdv.dataset.date,
+                    time = existingRdv.dataset.heure,
+                    tech = existingRdv.dataset.tech,
+                    valid = existingRdv.dataset.valid;
 
-            event.preventDefault();
+                event.preventDefault();
 
-            createModal(
-                `
+                createModal(
+                    `
                 Un rendez-vous <strong>${valid}</strong> existe déjà pour ce dossier :
                 <br>
                 <strong>${date}</strong> à <strong>${time}</strong> pour <strong>${tech}</strong>.
                 <br><br>
                 Voulez-vous vraiment le remplacer ?
             `,
-                () => form.submit()
-            );
-        }
+                    () => form.submit()
+                );
+            }
+        })
+    }
+
+    returnBtn.addEventListener('click', () => {
+        location.href = returnBtn.dataset.location;
     })
-}
 
-returnBtn.addEventListener('click', () => {
-    location.href = returnBtn.dataset.location;
-})
+    function createModal(message, onConfirm) {
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
 
-function createModal(message, onConfirm) {
-    const overlay = document.createElement('div');
-    overlay.className = 'overlay';
+        const modal = document.createElement('div');
+        modal.className = 'modal';
 
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-
-    modal.innerHTML = `
+        modal.innerHTML = `
         <p>${message}</p>
         <div>
             <button id="confirm-yes">Oui</button>
@@ -66,15 +65,17 @@ function createModal(message, onConfirm) {
         </div>
     `;
 
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
 
-    document.getElementById('confirm-yes').addEventListener('click', () => {
-        overlay.remove();
-        onConfirm();
-    });
+        document.getElementById('confirm-yes').addEventListener('click', () => {
+            overlay.remove();
+            onConfirm();
+        });
 
-    document.getElementById('confirm-no').addEventListener('click', () => {
-        overlay.remove();
-    });
-}
+        document.getElementById('confirm-no').addEventListener('click', () => {
+            overlay.remove();
+        });
+    }
+
+});

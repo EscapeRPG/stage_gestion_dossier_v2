@@ -1,3 +1,5 @@
+<h3>À venir</h3>
+
 <div class="pagination-controls">
     <form action="/ClientInfo?id={{ session('user')->idUser }}&action=detail-dossier&numInt=" method="post"
           class="dossier-search" id="numIntForm">

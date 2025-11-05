@@ -92,8 +92,13 @@
             <td>
                 <div class="tickets">
                     @foreach($rdvs as $rdv)
+                        @php
+                            [$year, $month, $day] = explode('-', $rdv->date);
+                            $dateFormatee = implode('/', [$day, $month]);
+                        @endphp
+
                         <div class="actions rdv">
-                            <strong>{{ $rdv->date }} - {{ $rdv->heure }}</strong>
+                            <strong>{{ $dateFormatee }}</strong> à <strong>{{ substr($rdv->heure, 0, 5) }}</strong> :
                             <em>{{ $rdv->tech }}</em>
                         </div>
                     @endforeach
