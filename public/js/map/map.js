@@ -41,5 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     clientCoords['nom'] = client.Nom_Cli;
     clientCoords['adresse'] = client.Adresse_Cli;
     clientCoords['CPVille'] = client.CP_Cli + ' ' + client.Ville_Cli;
+    clientCoords['machineClient'] = client.Marque + ' - ' + client.Type_App;
     await renderAllTechRoutes(map, rdvs, techniciensDisponibles, entrepriseCoords, clientCoords);
 });

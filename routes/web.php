@@ -12,6 +12,7 @@ Route::match(['get', 'post'], '/ClientInfo', [ClientInfoController::class, 'hand
     ->name('client.info')
     ->middleware('check.auth');
 
+Route::get('/ajax/suivi-dossiers', [ContratsController::class, 'suiviDossiers'])->name('ajax.suivi-dossiers');
 Route::get('/ajax/jour/{date}', [ContratsController::class, 'getDayInfo']);
 Route::get('/ajax/salaries/{codeAgence}', [ContratsController::class, 'getSalariesByAgence']);
 Route::get('/ajax/histo/{numInt}', [ContratsController::class, 'getHistoByNumInt']);

@@ -13,7 +13,6 @@ class GetInterventionDetail
         $intervention = DB::table('t_interventions')
             ->where('NumInt', 'like', $numInt)
             ->first();
-
         if (!$intervention) {
             return (object) [
                 'success' => false,
@@ -28,7 +27,15 @@ class GetInterventionDetail
             ->get();
         $intervention->historique = $historique;
 
+        $rdv = DB::table('t_planning')
+            ->select('Date_RDV', 'Heure_RDV', 'Tech_RDV', 'Valide', 'Obsolete')
+            ->where('Num_Int', 'like', $numInt)
+            ->where('Obsolete', '=', 'N')
+            ->first();
+        $intervention->rdv = $rdv;
+
         $questionsEtat = DB::table('t_questionsappels')
+            ->orderBy('Ordre', 'asc')
             ->get();
         $intervention->questions = $questionsEtat;
 
@@ -52,45 +59,38 @@ class GetInterventionDetail
             ->groupBy('CodeSal')
             ->map(function ($items) use ($codeAgence) {
                 $s = $items->first();
-
                 if ($s->CodeAgSal === $codeAgence) {
                     return [
                         'group' => 'Techniciens',
                         'value' => $s->CodeSal,
                     ];
                 }
-
                 if ($items->contains(fn($r) => $r->RespAg === $codeAgence && $r->Defaut === 'O')) {
                     return [
                         'group' => 'Responsables',
                         'value' => $s->CodeSal,
                     ];
                 }
-
                 return [
                     'group' => 'Autres',
                     'value' => $s->CodeSal,
                 ];
             })
             ->values();
-
         $grouped = $salaries->groupBy('group')->map(function ($group) {
             return $group->pluck('value')->unique()->sort()->values();
         });
-
         $desiredOrder = [
             'Techniciens',
             'Responsables',
             'Autres'
         ];
-
         $ordered = collect();
         foreach ($desiredOrder as $label) {
             if (isset($grouped[$label]) && $grouped[$label]->isNotEmpty()) {
                 $ordered[$label] = $grouped[$label];
             }
         }
-
         $intervention->salaries = $ordered;
 
         return (object) [

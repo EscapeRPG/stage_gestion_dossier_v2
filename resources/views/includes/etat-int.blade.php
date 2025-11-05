@@ -19,12 +19,12 @@
 
                 <div class="detail-etat">
                     <label for="marque">Marque</label>
-                    <input type="text" name="marque" id="marque" value="{{ $intervention->Marque }}">
+                    <input type="text" name="marque" id="marque" placeholder="{{ $intervention->Marque }}">
                 </div>
 
                 <div class="detail-etat">
                     <label for="appareil">Type</label>
-                    <input type="text" name="appareil" id="appareil" value="{{ $intervention->Type_App }}">
+                    <input type="text" name="appareil" id="appareil" placeholder="{{ $intervention->Type_App }}">
                 </div>
 
                 <fieldset>

@@ -134,24 +134,32 @@ export function initPlanning() {
             }).format(new Date(date));
 
             const h3 = document.createElement('h3');
-            const mapBtn = document.createElement('button');
-            mapBtn.id = 'openMapBtn';
-            mapBtn.type = 'button';
-            mapBtn.className = 'btn-map';
-            mapBtn.textContent = '🗺️';
-            mapBtn.setAttribute('data-tooltip', "Vue carte");
-            mapBtn.addEventListener('mouseenter', (e) => {
-                const rect = e.target.getBoundingClientRect();
-                e.target.style.setProperty('--tooltip-top', `${rect.top}px`);
-                e.target.style.setProperty('--tooltip-left', `${rect.left + rect.width / 2}px`);
-            });
-            let params = new URLSearchParams(document.location.search);
-            let numInt = params.get("numInt");
-            mapBtn.addEventListener('click', () => {
-                window.open(`/carte?numInt=${numInt}&date=${date}`, 'CarteRDV', 'width=1000,height=700');
-            });
             h3.textContent = `Journée du ${formattedDate}`;
-            h3.appendChild(mapBtn);
+
+            let dayRdv = false;
+            data.forEach(item => {
+                if (item.type === 'rdv') dayRdv = true;
+            });
+
+            if (dayRdv) {
+                const mapBtn = document.createElement('button');
+                mapBtn.id = 'openMapBtn';
+                mapBtn.type = 'button';
+                mapBtn.className = 'btn-map';
+                mapBtn.textContent = '🗺️';
+                mapBtn.setAttribute('data-tooltip', "Vue carte");
+                mapBtn.addEventListener('mouseenter', (e) => {
+                    const rect = e.target.getBoundingClientRect();
+                    e.target.style.setProperty('--tooltip-top', `${rect.top}px`);
+                    e.target.style.setProperty('--tooltip-left', `${rect.left + rect.width / 2}px`);
+                });
+                let params = new URLSearchParams(document.location.search);
+                let numInt = params.get("numInt");
+                mapBtn.addEventListener('click', () => {
+                    window.open(`/carte?numInt=${numInt}&date=${date}`, 'CarteRDV', 'width=1000,height=700');
+                });
+                h3.appendChild(mapBtn);
+            }
             infosDiv.appendChild(h3);
 
             const calendar = document.createElement('div');

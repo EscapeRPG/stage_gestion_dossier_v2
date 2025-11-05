@@ -15,13 +15,26 @@ class ContratsController extends Controller
 {
     public function suiviDossiers(Request $request, DossiersDashboard $dossierDashboard)
     {
-        $codeSal = session('user')->CodeSal;
-        $result = $dossierDashboard->getDossiersDashboard($codeSal);
-        $dossiers = $result['dossiers'];
-        $timelineToday = $result['timelineToday'];
-        $timeline = $result['timeline'];
+        $perPage = $request->input('perPage', 5);
+        $dossiers = $dossierDashboard->getDossiersDashboard();
+        $timelineToday = $dossierDashboard->getTodayCalendar();
+        $actions = $dossierDashboard->getToDoNext($dossiers);
+        $page = $request->input('page', 1);
+        $paged = $dossierDashboard->paginateCollection($actions, $perPage, $page, [
+            'path' => url()->current(),
+            'query' => $request->query(),
+        ]);
 
-        return view('suivi-dossiers', compact('dossiers', 'timeline', 'timelineToday'));
+        if ($request->ajax()) {
+            return view('partials.dossiers-table', compact('paged', 'perPage'))->render();
+        }
+
+        return view('suivi-dossiers', [
+            'dossiers' => $dossiers,
+            'timelineToday' => $timelineToday,
+            'actions' => $paged,
+            'perPage' => $perPage
+        ]);
     }
 
     public function detailDossier(Request $request, GetInterventionDetail $getInterventionDetail)

@@ -24,7 +24,7 @@ export async function renderAllTechRoutes(map, rdvs, techniciensDisponibles, ent
     if (clientCoords) {
         L.marker(clientCoords, {
             icon: L.icon({ iconUrl: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png', iconSize: [32, 32] })
-        }).addTo(map).bindPopup(`<b>Client : ${clientCoords.nom}</b><br>${clientCoords.adresse}<br>${clientCoords.CPVille}`);
+        }).addTo(map).bindPopup(`<b>Client : ${clientCoords.nom}</b><br>${clientCoords.adresse}<br>${clientCoords.CPVille}<br>${clientCoords.machineClient}`);
     }
 
     for (let i = 0; i < techs.length; i++) {
@@ -75,7 +75,16 @@ async function renderTechnicienRoute(map, rdvListDiv, rdvsByTech, tech, baseColo
     const rdvCoordsList = await Promise.all(rdvsTech.map(async (rdv, idx) => {
         const rdvDiv = document.createElement('div');
         rdvDiv.classList.add('rdv-item');
-        rdvDiv.innerHTML = `<b>${rdv.nom}</b><br>${rdv.adresse}<br><strong>${rdv.heure.slice(0, 5)}</strong>`;
+        rdvDiv.innerHTML = `
+            <strong>${rdv.heure.slice(0, 5)}</strong>
+            <br>
+            <br>
+            <b>${rdv.nom}</b>
+            <br>
+            ${rdv.adresse}
+            <br>
+            ${rdv.machineClient}
+        `;
         div.appendChild(rdvDiv);
 
         const coords = await geocode(rdv.adresse);
@@ -147,7 +156,13 @@ function openReassignPopup(marker, rdv, map, techniciensDisponibles, rdvsByTech)
 
     const popupDiv = document.createElement('div');
     popupDiv.innerHTML = `
-        <b>${rdv.nom}</b><br>${rdv.adresse}<br>
+        <b>${rdv.nom}</b>
+        <br>
+        ${rdv.adresse}
+        <br>
+        ${rdv.machineClient}
+        <br>
+        <br>
         <label for="selectTech">Réaffecter à :</label><br>
         <select id="selectTech" style="width: 100%; margin: 5px 0;">
             <option value="">-- Choisir un technicien --</option>

@@ -1,7 +1,7 @@
 .today-calendar, .next-calendar, .planning-calendar {
     display: flex;
     width: fit-content;
-    max-width: 100%;
+    max-width: calc(100% - 2px);
     padding: 0 !important;
     border-radius: 10px;
     overflow: auto;
@@ -10,6 +10,7 @@
     margin: 0 auto !important;
     box-shadow: var(--box-shadow);
     scrollbar-color: transparent transparent;
+    background: white;
 
     &:hover {
         scrollbar-color: var(--h2-main-color) transparent;
@@ -48,13 +49,6 @@
             width: calc(100% - .6em - 13px);
             box-shadow: var(--box-shadow);
 
-            /*
-            &.prio {
-                padding-right: 40px;
-                width: calc(100% - .6em - 53px);
-            }
-            */
-
             &:hover {
                 .dossier {
                     width: 100%;
@@ -91,7 +85,7 @@
     }
 
     .passed {
-        background: #e8e8e8;
+        background: #d8d8d8;
         border-right: 1px solid #b1b1b1;
 
         p {

@@ -12,8 +12,8 @@ class SaveDossier
         $validated = $request->validate([
             'numInt' => ['required', 'string', 'max:20', 'regex:/^[A-Z0-9]{4}-\d{4}-\d{5}$/i'],
             'nomCli' => ['required', 'string', 'max:50'],
-            'marque' => ['required', 'string', 'max:50'],
-            'appareil' => ['required', 'string', 'max:50'],
+            'marque' => ['nullable', 'string', 'max:50'],
+            'appareil' => ['nullable', 'string', 'max:50'],
             'commentaire-histo' => ['nullable', 'string', 'max:60'],
             'commentaire-detail-histo' => ['nullable', 'string', 'max:250'],
             'reaffectation-dossier' => ['nullable', 'string', 'max:5'],
@@ -35,11 +35,18 @@ class SaveDossier
         $heure = now()->format('H:i:s');
 
         DB::transaction(function () use ($validated, $codeSal, $agence, $date, $heure, $numInt) {
-            if (!empty($validated['marque']) || !empty($validated['appareil'])) {
+            if ($validated['marque'] !== null) {
                 DB::table('t_interventions')
                     ->where('numInt', $numInt)
                     ->update([
                         'Marque' => $validated['marque'],
+                    ]);
+            }
+
+            if ($validated['appareil'] !== null) {
+                DB::table('t_interventions')
+                    ->where('numInt', $numInt)
+                    ->update([
                         'Type_App' => $validated['appareil'],
                     ]);
             }
@@ -63,6 +70,18 @@ class SaveDossier
                 'Tech_RDV' => $validated['tech-rdv'] ?? null,
             ]);
 
+            $previousEntry = DB::table('t_reponsesappels')
+                ->where('NumInt', $numInt)
+                ->get();
+
+            if ($previousEntry) {
+                DB::table('t_reponsesappels')
+                    ->where('NumInt', $numInt)
+                    ->update([
+                        'Obsolete' => 'O'
+                    ]);
+            }
+
             foreach (['etat', 'a-faire'] as $champ) {
                 if (!empty($validated[$champ])) {
                     foreach ($validated[$champ] as $valeur) {
@@ -75,6 +94,7 @@ class SaveDossier
                             'AFaire_Date' => $champ === 'a-faire' ? $validated['date-a-faire'] ?? null : null,
                             'AFaire_Heure' => $champ === 'a-faire' ? $validated['heure-a-faire'] ?? null : null,
                             'AFaire_Tech' => $champ === 'a-faire' ? $validated['reaffectation-dossier'] ?? null : null,
+                            'prio' => $validated['urgent'] ?? 'N',
                         ]);
                     }
                 }
@@ -86,27 +106,43 @@ class SaveDossier
                     ->where('NumInt', $numInt)
                     ->first();
 
+                $existingRDV = DB::table('t_planning')
+                    ->where('Num_Int', $numInt)
+                    ->where('Date_RDV', '!=', null)
+                    ->first();
+
                 if ($client) {
-                    DB::table('t_planning')->insert([
-                        'Code_Sal' => $codeSal,
-                        'Num_Int' => $numInt,
-                        'Heure_Enrg' => $heure,
-                        'Date_RDV' => $validated['dateRDV'],
-                        'Heure_RDV' => $validated['timeRDV'],
-                        'Tech_RDV' => $validated['tech-rdv'],
-                        'Valide' => $validated['validRDV'] ?? 'N',
-                        'Agence' => $agence,
-                        'Nom_Cli' => $validated['nomCli'],
-                        'Adresse_Cli' => is_resource($client->Adresse_Cli)
-                            ? stream_get_contents($client->Adresse_Cli)
-                            : $client->Adresse_Cli,
-                        'CP_Cli' => $client->CP_Cli,
-                        'Ville_Cli' => $client->Ville_Cli,
-                        'Num_Tel_Cli' => $client->Num_Tel_Cli,
-                        'Mail_Cli' => $client->Mail_Cli,
-                        'Marque' => $client->Marque,
-                        'Type_App' => $client->Type_App,
-                    ]);
+                    if ($existingRDV) {
+                        DB::table('t_planning')
+                            ->where('Num_Int', $numInt)
+                            ->update([
+                                'Date_RDV' => $validated['dateRDV'],
+                                'Heure_RDV' => $validated['timeRDV'],
+                                'Tech_RDV' => $validated['tech-rdv'],
+                                'Valide' => $validated['validRDV'] ?? 'N',
+                            ]);
+                    } else {
+                        DB::table('t_planning')->insert([
+                            'Code_Sal' => $codeSal,
+                            'Num_Int' => $numInt,
+                            'Heure_Enrg' => $heure,
+                            'Date_RDV' => $validated['dateRDV'],
+                            'Heure_RDV' => $validated['timeRDV'],
+                            'Tech_RDV' => $validated['tech-rdv'],
+                            'Valide' => $validated['validRDV'] ?? 'N',
+                            'Agence' => $agence,
+                            'Nom_Cli' => $validated['nomCli'],
+                            'Adresse_Cli' => is_resource($client->Adresse_Cli)
+                                ? stream_get_contents($client->Adresse_Cli)
+                                : $client->Adresse_Cli,
+                            'CP_Cli' => $client->CP_Cli,
+                            'Ville_Cli' => $client->Ville_Cli,
+                            'Num_Tel_Cli' => $client->Num_Tel_Cli,
+                            'Mail_Cli' => $client->Mail_Cli,
+                            'Marque' => $client->Marque,
+                            'Type_App' => $client->Type_App,
+                        ]);
+                    }
                 }
             }
         });

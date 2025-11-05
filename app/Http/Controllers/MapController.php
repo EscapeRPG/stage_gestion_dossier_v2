@@ -14,8 +14,9 @@ class MapController extends Controller
 
         $rdvs = DB::table('t_planning as p')
             ->leftJoin('t_interventions as t', 't.NumInt', '=', 'p.Num_Int')
-            ->select('t.NumInt', 't.Nom_Cli', 't.Adresse_Cli', 't.CP_Cli', 't.Ville_Cli', 'p.Date_RDV', 'p.Heure_RDV', 'p.Tech_RDV')
+            ->select('t.NumInt', 't.Nom_Cli', 't.Adresse_Cli', 't.CP_Cli', 't.Ville_Cli', 'p.Date_RDV', 'p.Heure_RDV', 'p.Tech_RDV', 'p.Marque', 'p.Type_App')
             ->whereDate('p.Date_RDV', '=', $date)
+            ->where('p.Obsolete', '=', 'N')
             ->get()
             ->map(function ($item) {
                 return [
@@ -25,6 +26,7 @@ class MapController extends Controller
                     'date' => $item->Date_RDV,
                     'heure' => $item->Heure_RDV,
                     'technicien' => $item->Tech_RDV,
+                    'machineClient' => $item->Marque . ' - ' . $item->Type_App
                 ];
             });
 
@@ -38,7 +40,7 @@ class MapController extends Controller
 
         $client = DB::table('t_interventions')
             ->where('NumInt', $numInt)
-            ->select('Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli')
+            ->select('Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli', 'Marque', 'Type_App')
             ->first();
 
         $entreprise = [

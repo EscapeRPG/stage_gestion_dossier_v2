@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/historique.css') }}">
     <link rel="stylesheet" href="{{ asset('css/today-calendar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modal.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @endsection
 
@@ -16,7 +17,9 @@
         <div class="main-container">
             @include('includes.calendrier')
 
-            <form action="/ClientInfo?id={{ session('user')->idUser }}&action=save-dossier&numInt={{ $intervention->NumInt }}" method="post" class="dossier-detail-form">
+            <form
+                action="/ClientInfo?id={{ session('user')->idUser }}&action=save-dossier&numInt={{ $intervention->NumInt }}"
+                method="post" class="dossier-detail-form">
                 @csrf
 
                 <div class="dossier-detail-container">
@@ -31,7 +34,12 @@
                 </div>
 
                 <input type="hidden" name="numInt" id="numInt" value="{{ $intervention->NumInt }}">
-                <button class="save-btn">Enregistrer le dossier</button>
+                <button class="save-btn" id="save-btn">
+                    Enregistrer le dossier
+                </button>
+                <button type="button" id="return" data-location="/ClientInfo?id={{ session('user')->idUser }}&action=suivi-dossiers">
+                    Retour
+                </button>
             </form>
         </div>
     </main>

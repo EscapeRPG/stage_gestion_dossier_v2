@@ -1,0 +1,142 @@
+#dossiers-container {
+    margin: 0;
+    padding: 0;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--nav-main-color);
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+
+    thead {
+        background: var(--horaire-background);
+        color: white;
+        text-shadow: 0 0 2px black;
+
+        th {
+            padding: 5px 10px;
+        }
+    }
+
+    tr {
+        border-bottom: 1px solid var(--nav-main-color);
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    td {
+        padding: 5px;
+        text-align: center;
+    }
+
+    .adresse {
+        color: grey;
+        font-size: .9em;
+        margin: 0;
+        padding: 0 0 0 20px;
+        border: none;
+    }
+
+    .highlight-tech {
+        font-weight: bold;
+        color: #2aca2a;
+    }
+
+    .tickets {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .actions {
+        padding: 10px !important;
+        position: relative;
+    }
+
+    a {
+        color: var(--h2-main-color);
+        font-weight: bold;
+        text-decoration: none;
+
+        &:hover {
+            color: orange;
+        }
+    }
+}
+
+.pagination-controls {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    border: none !important;
+    padding: 0 !important;
+    margin: 10px 0 !important;
+
+    .page-btn {
+        border-radius: 5px;
+        border: 1px solid black;
+        width: 30px;
+        height: 30px;
+        background: white;
+        cursor: pointer;
+
+        &:hover {
+            background: var(--horaire-background);
+            color: white;
+        }
+    }
+}
+
+.pagination-links {
+    width: fit-content;
+    margin: 10px auto !important;
+    background: none !important;
+    border: none !important;
+
+    nav {
+        background: none !important;
+        border: none !important;
+        padding: 0;
+    }
+
+    .pagination {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        padding: 0;
+        margin: 0;
+
+        a {
+            color: var(--h2-main-color);
+
+            &:hover {
+                color: orange;
+            }
+        }
+
+        .disabled {
+            color: lightgray;
+        }
+
+        .active {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    }
+}
