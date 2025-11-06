@@ -1,5 +1,4 @@
 import { initMap } from './config/initMap.js';
-import { geocode } from './utils/geocode.js';
 import { getIntervention, getRdvs } from './api/api.js';
 import { renderAllTechRoutes } from './ui/rdvList.js';
 
@@ -34,13 +33,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Erreur chargement RDV', e);
     }
 
-    const entrepriseCoords = entreprise ? {'lat': entreprise.lat, 'lon': entreprise.lon, 'adresse': entreprise.adresse} : null;
-    const clientCoords = client
-        ? await geocode(`${client.Adresse_Cli}, ${client.CP_Cli} ${client.Ville_Cli}`)
-        : null;
-    clientCoords['nom'] = client.Nom_Cli;
-    clientCoords['adresse'] = client.Adresse_Cli;
-    clientCoords['CPVille'] = client.CP_Cli + ' ' + client.Ville_Cli;
-    clientCoords['machineClient'] = client.Marque + ' - ' + client.Type_App;
+    const entrepriseCoords = entreprise ? {
+        lat: parseFloat(entreprise.lat),
+        lon: parseFloat(entreprise.lon),
+        adresse: entreprise.adresse
+    } : null;
+
+    const lat = parseFloat(client.Lat_Cli);
+    const lon = parseFloat(client.Lon_Cli);
+    const clientCoords = (!isNaN(lat) && !isNaN(lon)) ? {
+        lat,
+        lon,
+        nom: client.Nom_Cli,
+        adresse: client.Adresse_Cli,
+        CPVille: client.CP_Cli + ' ' + client.Ville_Cli,
+        machineClient: client.Marque + ' - ' + client.Type_App
+    } : null;
+
     await renderAllTechRoutes(map, rdvs, techniciensDisponibles, entrepriseCoords, clientCoords);
 });

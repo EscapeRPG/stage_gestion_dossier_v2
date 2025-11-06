@@ -14,7 +14,7 @@ class MapController extends Controller
 
         $rdvs = DB::table('t_planning as p')
             ->leftJoin('t_interventions as t', 't.NumInt', '=', 'p.Num_Int')
-            ->select('t.NumInt', 't.Nom_Cli', 't.Adresse_Cli', 't.CP_Cli', 't.Ville_Cli', 'p.Date_RDV', 'p.Heure_RDV', 'p.Tech_RDV', 'p.Marque', 'p.Type_App')
+            ->select('t.NumInt', 't.Nom_Cli', 't.Adresse_Cli', 't.CP_Cli', 't.Ville_Cli', 't.Lat_Cli', 't.Lon_Cli', 'p.Date_RDV', 'p.Heure_RDV', 'p.Tech_RDV', 'p.Marque', 'p.Type_App')
             ->whereDate('p.Date_RDV', '=', $date)
             ->where('p.Obsolete', '=', 'N')
             ->get()
@@ -26,7 +26,9 @@ class MapController extends Controller
                     'date' => $item->Date_RDV,
                     'heure' => $item->Heure_RDV,
                     'technicien' => $item->Tech_RDV,
-                    'machineClient' => $item->Marque . ' - ' . $item->Type_App
+                    'machineClient' => $item->Marque . ' - ' . $item->Type_App,
+                    'Lat_Cli' => $item->Lat_Cli !== null ? (float)$item->Lat_Cli : null,
+                    'Lon_Cli' => $item->Lon_Cli !== null ? (float)$item->Lon_Cli : null
                 ];
             });
 

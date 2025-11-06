@@ -1,11 +1,15 @@
-import { geocode, distance } from '../utils/geocode.js';
+import { distance } from '../utils/geocode.js';
 import { reassignRdv } from '../api/api.js';
 import { COLORS, COLOR_BG } from '../config/mapColors.js';
 
+/**
+ * Affiche tous les trajets des techniciens sur la map avec des lignes droites
+ */
 export async function renderAllTechRoutes(map, rdvs, techniciensDisponibles, entrepriseCoords, clientCoords) {
     const rdvListDiv = document.getElementById('rdvList');
     rdvListDiv.innerHTML = '';
 
+    // Regrouper RDVs par technicien
     const rdvsByTech = {};
     rdvs.forEach(rdv => {
         if (!rdvsByTech[rdv.technicien]) rdvsByTech[rdv.technicien] = [];
@@ -15,16 +19,20 @@ export async function renderAllTechRoutes(map, rdvs, techniciensDisponibles, ent
     const techs = Object.keys(rdvsByTech);
     const markersMap = {};
 
+    // Marker entreprise
     if (entrepriseCoords) {
-        L.marker(entrepriseCoords, {
+        L.marker([entrepriseCoords.lat, entrepriseCoords.lon], {
             icon: L.icon({ iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png', iconSize: [32, 32] })
         }).addTo(map).bindPopup(`<b>Maintronic</b><br>${entrepriseCoords.adresse}`);
     }
 
+    // Marker client
     if (clientCoords) {
-        L.marker(clientCoords, {
+        L.marker([clientCoords.lat, clientCoords.lon], {
             icon: L.icon({ iconUrl: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png', iconSize: [32, 32] })
-        }).addTo(map).bindPopup(`<b>Client : ${clientCoords.nom}</b><br>${clientCoords.adresse}<br>${clientCoords.CPVille}<br>${clientCoords.machineClient}`);
+        }).addTo(map).bindPopup(
+            `<b>Client : ${clientCoords.nom}</b><br>${clientCoords.adresse}<br>${clientCoords.CPVille}<br>${clientCoords.machineClient}`
+        );
     }
 
     for (let i = 0; i < techs.length; i++) {
@@ -34,6 +42,9 @@ export async function renderAllTechRoutes(map, rdvs, techniciensDisponibles, ent
     }
 }
 
+/**
+ * Affiche la route d’un technicien avec lignes droites
+ */
 async function renderTechnicienRoute(map, rdvListDiv, rdvsByTech, tech, baseColor, techniciensDisponibles, entrepriseCoords, markersMap) {
     if (markersMap[tech]) {
         markersMap[tech].forEach(m => map.removeLayer(m));
@@ -43,6 +54,7 @@ async function renderTechnicienRoute(map, rdvListDiv, rdvsByTech, tech, baseColo
     const rdvsTech = rdvsByTech[tech] || [];
     if (!rdvsTech.length) return;
 
+    // Créer la section technicien à gauche
     const div = document.createElement('div');
     div.classList.add('tech');
     div.dataset.tech = tech;
@@ -72,7 +84,9 @@ async function renderTechnicienRoute(map, rdvListDiv, rdvsByTech, tech, baseColo
     h3.style.color = 'black';
     div.appendChild(h3);
 
-    const rdvCoordsList = await Promise.all(rdvsTech.map(async (rdv, idx) => {
+    // Récupérer les coordonnées des RDVs
+    const rdvCoordsList = rdvsTech.map((rdv, idx) => {
+        const coords = [parseFloat(rdv.Lat_Cli), parseFloat(rdv.Lon_Cli)];
         const rdvDiv = document.createElement('div');
         rdvDiv.classList.add('rdv-item');
         rdvDiv.innerHTML = `
@@ -86,49 +100,45 @@ async function renderTechnicienRoute(map, rdvListDiv, rdvsByTech, tech, baseColo
             ${rdv.machineClient}
         `;
         div.appendChild(rdvDiv);
-
-        const coords = await geocode(rdv.adresse);
         return { coords, rdv, idx };
-    }));
+    });
+
+    // Calculer l'ordre des RDVs avec distance minimale
+    const routePoints = calcRouteOrder([entrepriseCoords.lat, entrepriseCoords.lon], rdvCoordsList.map(x => x.coords));
+
+    // Estimation distance totale et durée (en km et min)
+    let totalDistance = 0;
+    for (let i = 0; i < routePoints.length - 1; i++) {
+        totalDistance += distance(routePoints[i], routePoints[i + 1]);
+    }
+    const distanceKm = totalDistance.toFixed(1);
+    const averageSpeed = 50; // km/h
+    const durationMin = Math.round((totalDistance / averageSpeed) * 60);
+
+    const info = document.createElement('div');
+    info.classList.add('route-info');
+    info.innerHTML = `<b>Distance:</b> ${distanceKm} km<br><b>Durée estimée:</b> ${durationMin} min`;
+    div.appendChild(info);
 
     rdvListDiv.appendChild(div);
 
-    const validCoords = rdvCoordsList.filter(x => x.coords !== null).map(x => x.coords);
-    if (!validCoords.length) return;
+    if (!rdvCoordsList.length) return;
 
-    const routePoints = calcRouteOrder([entrepriseCoords.lat, entrepriseCoords.lon], validCoords);
+    // Tracer ligne droite
+    const line = L.polyline(routePoints, { color: baseColor, weight: 4 }).addTo(map);
+    markersMap[tech].push(line);
 
-    const osrmUrl = `https://router.project-osrm.org/route/v1/driving/` +
-        routePoints.map(c => c[1] + ',' + c[0]).join(';') +
-        `?overview=full&geometries=geojson`;
-
-    try {
-        const res = await fetch(osrmUrl);
-        const data = await res.json();
-        if (data.code === 'Ok') {
-            const route = data.routes[0];
-            const line = L.geoJSON(route.geometry, { color: baseColor, weight: 4 }).addTo(map);
-            markersMap[tech].push(line);
-
-            for (let idx = 1; idx < routePoints.length - 1; idx++) {
-                const coord = routePoints[idx];
-                const rdv = rdvCoordsList[idx - 1].rdv;
-                const marker = createRdvMarker(coord, baseColor, idx, map, rdv, techniciensDisponibles, rdvsByTech);
-                markersMap[tech].push(marker);
-            }
-
-            const distanceKm = (route.distance / 1000).toFixed(1);
-            const durationMin = Math.round(route.duration / 60);
-            const info = document.createElement('div');
-            info.classList.add('route-info');
-            info.innerHTML = `<b>Distance:</b> ${distanceKm} km<br><b>Durée:</b> ${durationMin} min`;
-            div.appendChild(info);
-        }
-    } catch (e) {
-        console.error('Erreur OSRM', e);
+    // Ajouter les markers des RDVs
+    for (let idx = 0; idx < rdvCoordsList.length; idx++) {
+        const { coords, rdv } = rdvCoordsList[idx];
+        const marker = createRdvMarker(coords, baseColor, idx + 1, map, rdv, techniciensDisponibles, rdvsByTech);
+        markersMap[tech].push(marker);
     }
 }
 
+/**
+ * Crée un marker cliquable pour réaffectation
+ */
 function createRdvMarker(coord, baseColor, idx, map, rdv, techniciensDisponibles, rdvsByTech) {
     const marker = L.marker(coord, {
         icon: L.divIcon({
@@ -141,6 +151,9 @@ function createRdvMarker(coord, baseColor, idx, map, rdv, techniciensDisponibles
     return marker;
 }
 
+/**
+ * Popup pour réaffectation
+ */
 function openReassignPopup(marker, rdv, map, techniciensDisponibles, rdvsByTech) {
     const groupes = {};
     techniciensDisponibles.forEach(t => {
@@ -194,13 +207,19 @@ function openReassignPopup(marker, rdv, map, techniciensDisponibles, rdvsByTech)
     });
 }
 
-function calcRouteOrder(entrepriseCoords, validCoords) {
-    let routePoints = [entrepriseCoords];
-    let remaining = [...validCoords];
+/**
+ * Calcule un ordre de parcours en minimisant la distance (plus proche voisin)
+ */
+function calcRouteOrder(startCoords, points) {
+    let routePoints = [startCoords];
+    let remaining = [...points];
+
+    // Premier point le plus éloigné pour éviter le zigzag
     let farthestIdx = remaining.reduce((maxIdx, cur, i) =>
-        distance(entrepriseCoords, cur) > distance(entrepriseCoords, remaining[maxIdx]) ? i : maxIdx, 0);
+        distance(startCoords, cur) > distance(startCoords, remaining[maxIdx]) ? i : maxIdx, 0);
     routePoints.push(remaining[farthestIdx]);
     remaining.splice(farthestIdx, 1);
+
     while (remaining.length) {
         const last = routePoints[routePoints.length - 1];
         let nearestIdx = remaining.reduce((minIdx, cur, i) =>
@@ -208,6 +227,7 @@ function calcRouteOrder(entrepriseCoords, validCoords) {
         routePoints.push(remaining[nearestIdx]);
         remaining.splice(nearestIdx, 1);
     }
-    routePoints.push(entrepriseCoords);
+
+    routePoints.push(startCoords); // retour entreprise
     return routePoints;
 }
