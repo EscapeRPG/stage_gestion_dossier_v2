@@ -45,6 +45,7 @@ class DossiersDashboard
 
         $todayTodos = DB::table('t_reponsesappels')
             ->where('Type', 'À Faire')
+            ->where('AFaire_Tech', '=', session('user')->CodeSal)
             ->where('AFaire_Date', $today)
             ->where('Obsolete', 'N')
             ->get();
