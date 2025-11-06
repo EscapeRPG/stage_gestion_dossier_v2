@@ -1,9 +1,3 @@
-export async function geocode(address) {
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
-    const results = await response.json();
-    return results.length > 0 ? [parseFloat(results[0].lat), parseFloat(results[0].lon)] : null;
-}
-
 export function distance([lat1, lon1], [lat2, lon2]) {
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
