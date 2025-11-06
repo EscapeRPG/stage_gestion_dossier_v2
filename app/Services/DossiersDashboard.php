@@ -9,6 +9,9 @@ use Illuminate\Support\Collection;
 
 class DossiersDashboard
 {
+    /**
+     * @return Collection
+     */
     public function getDossiersDashboard(): Collection
     {
         $codeAgence = session('user')->CodeAgSal;

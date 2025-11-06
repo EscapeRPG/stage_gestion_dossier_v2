@@ -15,7 +15,7 @@ class ContratsController extends Controller
 {
     public function suiviDossiers(Request $request, DossiersDashboard $dossierDashboard)
     {
-        $perPage = $request->input('perPage', 5);
+        $perPage = $request->input('perPage', 10);
         $dossiers = $dossierDashboard->getDossiersDashboard();
         $timelineToday = $dossierDashboard->getTodayCalendar();
         $actions = $dossierDashboard->getToDoNext($dossiers);

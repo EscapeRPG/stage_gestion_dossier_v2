@@ -199,3 +199,20 @@
         }
     }
 }
+
+
+
+.info-rdv {
+    cursor: pointer;
+    padding: .2em .6em;
+    margin-bottom: 2px;
+    background: #3da5ef;
+    border-radius: 100%;
+    border: 2px solid white;
+    outline: 1px solid black;
+    color: white;
+
+    &:hover {
+        background: black;
+    }
+}

@@ -7,6 +7,7 @@
         <th>Date / Heure</th>
         <th>À Faire</th>
         <th>Rendez-vous</th>
+        <th></th>
     </tr>
     </thead>
 
@@ -103,6 +104,12 @@
                         </div>
                     @endforeach
                 </div>
+            </td>
+
+            <td>
+                <a href="/ClientInfo?id={{ session('user')->idUser }}&action=detail-dossier&numInt={{ $dossier->NumInt }}">
+                    <span class="info-rdv">i</span>
+                </a>
             </td>
         </tr>
     @endforeach
