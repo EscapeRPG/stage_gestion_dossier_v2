@@ -9,31 +9,32 @@ class GetDayInfo
 {
     public function getDayInfo($date): Collection
     {
-        $rdvs = DB::table('t_planning')
-            ->whereDate('Date_RDV', $date)
-            ->orderBy('Heure_RDV', 'asc')
+        $rdvs = DB::table('t_planning as p')
+            ->join('t_interventions as i', 'i.NumInt', '=', 'p.Num_Int')
+            ->whereDate('p.Date_RDV', $date)
+            ->where('p.Obsolete', '=', 'N')
+            ->orderBy('p.Heure_RDV', 'asc')
             ->select(
-                'Num_Int',
-                'Code_Sal',
-                'Heure_Enrg',
-                'Tech_RDV',
-                'Date_RDV',
-                'Heure_RDV',
-                'Valide',
-                'Nom_Cli',
-                'Adresse_Cli',
-                'Ville_Cli',
-                'Num_Tel_Cli',
-                'Mail_Cli',
-                'Marque',
-                'Type_App'
+                'p.Num_Int',
+                'p.Code_Sal',
+                'p.Heure_Enrg',
+                'p.Tech_RDV',
+                'p.Date_RDV',
+                'p.Heure_RDV',
+                'p.Valide',
+                'i.Nom_Cli',
+                'i.Adresse_Cli',
+                'i.Ville_Cli',
+                'i.Num_Tel_Cli',
+                'i.Mail_Cli',
+                'i.Marque',
+                'i.Type_App'
             )
             ->get()
             ->map(fn($item) => (object)[
                 'type' => 'rdv',
                 'NumInt' => $item->Num_Int,
                 'Code_Sal' => $item->Code_Sal,
-                'Tech_Affecte' => null,
                 'Tech_RDV' => $item->Tech_RDV,
                 'Valide' => $item->Valide,
                 'date' => $item->Date_RDV,
@@ -45,69 +46,51 @@ class GetDayInfo
                 'Num_Tel_Cli' => $item->Num_Tel_Cli,
                 'Mail_Cli' => $item->Mail_Cli,
                 'Marque' => $item->Marque,
-                'Type_App' => $item->Type_App
+                'Type_App' => $item->Type_App,
             ]);
 
-        $histos = DB::table('t_histoappels')
-            ->whereDate('AFaire_Date', $date)
+        $taches = DB::table('t_reponsesappels as r')
+            ->join('t_interventions as i', 'i.NumInt', '=', 'r.NumInt')
+            ->where('r.Type', 'À Faire')
+            ->where('r.Obsolete', '=', 'N')
+            ->whereDate('r.AFaire_Date', $date)
             ->select(
-                'Num_Int',
-                'Code_Sal',
-                'Heure_MAJ',
-                'Tech_Affecte',
-                'Tech_RDV',
-                'AFaire_Date',
-                'AFaire_Heure',
-                'Nom_Cli'
+                'r.NumInt',
+                'r.Question',
+                'r.AFaire_Heure',
+                'r.AFaire_Tech',
+                'r.AFaire_Date',
+                'i.Nom_Cli',
+                'i.Adresse_Cli',
+                'i.Ville_Cli',
+                'i.Num_Tel_Cli',
+                'i.Mail_Cli'
             )
-            ->get();
-
-        $tachesGrouped = DB::table('t_reponsesappels')
-            ->where('Type', 'À Faire')
-            ->whereDate('AFaire_Date', $date)
-            ->select('NumInt', 'Question', 'AFaire_Heure', 'AFaire_Tech')
             ->get()
-            ->groupBy(fn($item) => $item->NumInt . '|' . ($item->AFaire_Tech ?? '') . '|' . $item->AFaire_Heure);
-
-        $todos = $histos->map(function ($item) use ($tachesGrouped) {
-            $key = $item->Num_Int . '|' . ($item->Tech_Affecte ?? '') . '|' . $item->AFaire_Heure;
-
-            return (object)[
-                'type' => 'tache',
-                'NumInt' => $item->Num_Int,
-                'Code_Sal' => $item->Code_Sal,
-                'Tech_Affecte' => $item->Tech_Affecte,
-                'Tech_RDV' => $item->Tech_RDV,
-                'Heure_Enrg' => $item->Heure_MAJ,
-                'date' => $item->AFaire_Date,
-                'heure' => $item->AFaire_Heure,
-                'Nom_Cli' => $item->Nom_Cli ?? 'Client inconnu',
-                'taches' => $tachesGrouped[$key] ?? collect(),
-            ];
-        });
-
-        $todos = $todos
-            ->groupBy(fn($item) => ($item->Tech_Affecte ?? '') . '|' . $item->heure)
+            ->groupBy(fn($item) => $item->NumInt . '|' . ($item->AFaire_Tech ?? '') . '|' . $item->AFaire_Heure)
             ->map(function ($group) {
                 $first = $group->first();
-                $mergedTasks = $group->flatMap(fn($t) => $t->taches)->unique(fn($t) => $t->Question)->values();
 
                 return (object)[
                     'type' => 'tache',
-                    'Code_Sal' => $first->Code_Sal,
-                    'Tech_Affecte' => $first->Tech_Affecte,
-                    'Tech_RDV' => $first->Tech_RDV,
-                    'Heure_Enrg' => $first->Heure_Enrg,
-                    'date' => $first->date,
-                    'heure' => $first->heure,
-                    'Nom_Cli' => $group->pluck('Nom_Cli')->unique()->implode(', '),
-                    'taches' => $mergedTasks,
-                    'NumInt' => $group->pluck('NumInt')->unique()->values(),
+                    'NumInt' => $first->NumInt,
+                    'Tech_Affecte' => $first->AFaire_Tech,
+                    'date' => $first->AFaire_Date,
+                    'heure' => $first->AFaire_Heure,
+                    'Nom_Cli' => $first->Nom_Cli ?? 'Client inconnu',
+                    'Adresse_Cli' => $first->Adresse_Cli,
+                    'Ville_Cli' => $first->Ville_Cli,
+                    'Num_Tel_Cli' => $first->Num_Tel_Cli,
+                    'Mail_Cli' => $first->Mail_Cli,
+                    'taches' => $group->map(fn($t) => (object)[
+                        'question' => $t->Question
+                    ]),
                 ];
             })
             ->values();
 
-        return $rdvs->merge($todos)
+        return $rdvs
+            ->merge($taches)
             ->sortBy('heure')
             ->values();
     }

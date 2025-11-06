@@ -64,8 +64,8 @@ export function initPlanning() {
     }
 
     function createTacheDetail(item, heure, heureEnr, ul) {
+        console.log(item);
         ul.append(
-            createLI(`<strong>Enregistré par :</strong> ${item.Code_Sal} <strong>À :</strong> ${heureEnr}`),
             createLI(`<strong>Technicien en charge des prochaines tâches :</strong> ${item.Tech_Affecte || 'N/A'}`),
             createLI(`<strong>Client :</strong> ${item.Nom_Cli || 'N/A'}`)
         );
@@ -79,7 +79,7 @@ export function initPlanning() {
             const actionDiv = document.createElement('div');
             actionDiv.classList.add('action');
             actionDiv.classList.add('todo');
-            actionDiv.innerHTML = tache.Question;
+            actionDiv.innerHTML = tache.question;
             innerDiv.appendChild(actionDiv);
         });
         div.appendChild(innerDiv);
@@ -89,7 +89,6 @@ export function initPlanning() {
 
     function createRDVDetail(item, heure, heureEnr, ul) {
         ul.append(
-            createLI(`<strong>Pris par :</strong> ${item.Code_Sal} <strong>À :</strong> ${heureEnr} ${item.Valide === 'O' ? '<div class="valid">Validé</div>' : '<div class="not-valid">Non validé</div>'}`),
             createLI(`<strong>Technicien affecté :</strong> ${item.Tech_RDV || 'N/A'}`),
             createLI(`<strong>Client :</strong> ${item.Nom_Cli || 'N/A'}`),
             createLI(`<strong>Adresse :</strong> ${item.Adresse_Cli || ''}, ${item.CP_Cli || ''} ${item.Ville_Cli || ''}`),
