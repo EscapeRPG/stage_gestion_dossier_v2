@@ -127,7 +127,7 @@ class DossiersDashboard
             elseif ($taches->contains(fn($t) => $t->prio === 'O')) $priority = 2;
             elseif ($taches->contains(fn($t) => $t->tech === $tech)) $priority = 3;
 
-            $date = collect([$taches, $rdvs])->flatten()->pluck('date')->filter()->sort()->first();
+            $date = collect([$taches])->flatten()->pluck('date')->filter()->sort()->first();
             $heure = collect([$taches, $rdvs])->flatten()->pluck('heure')->filter()->sort()->first();
 
             return (object)[
