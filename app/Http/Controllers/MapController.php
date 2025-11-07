@@ -42,7 +42,7 @@ class MapController extends Controller
 
         $client = DB::table('t_interventions')
             ->where('NumInt', $numInt)
-            ->select('Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli', 'Marque', 'Type_App')
+            ->select('Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli', 'Marque', 'Type_App', 'Lat_Cli', 'Lon_Cli')
             ->first();
 
         $entreprise = [
