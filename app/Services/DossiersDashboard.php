@@ -34,7 +34,7 @@ class DossiersDashboard
             })
             ->where('Date_Fin_Int', '=', '0000-00-00')
             ->where('Lieu_Int', 'like', 'site')
-            ->select('NumInt', 'Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli', 'Num_Tel_Cli', 'Mail_Cli')
+            ->select('NumInt', 'Nom_Cli', 'Adresse_Cli', 'CP_Cli', 'Ville_Cli', 'Num_Tel_Cli', 'Mail_Cli', 'Marque', 'Type_App')
             ->get();
     }
 
@@ -90,7 +90,7 @@ class DossiersDashboard
             ->where('t.Obsolete', 'N')
             ->select(
                 'i.NumInt',
-                'i.Nom_Cli', 'i.Adresse_Cli', 'i.CP_Cli', 'i.Ville_Cli', 'i.Num_Tel_Cli', 'i.Mail_Cli',
+                'i.Nom_Cli', 'i.Adresse_Cli', 'i.CP_Cli', 'i.Ville_Cli', 'i.Num_Tel_Cli', 'i.Mail_Cli', 'i.Marque', 'i.Type_App',
                 't.Type as t_type', 't.AFaire_Tech', 't.AFaire_Date', 't.AFaire_Heure', 't.Question', 't.prio',
                 'p.Tech_RDV', 'p.Date_RDV', 'p.Heure_RDV', 'p.Nom_Cli as p_nom_cli'
             )
@@ -138,6 +138,8 @@ class DossiersDashboard
                 'Ville_Cli' => $dossier->Ville_Cli,
                 'Num_Tel_Cli' => $dossier->Num_Tel_Cli,
                 'Mail_Cli' => $dossier->Mail_Cli,
+                'Marque' => $dossier->Marque,
+                'Type_App' => $dossier->Type_App,
                 'actions' => $taches->merge($rdvs),
                 'priority' => $priority,
                 'date' => $date,

@@ -3,26 +3,21 @@
     width: fit-content;
     max-width: calc(100% - 2px);
     padding: 0 !important;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: auto;
-    border: 1px solid var(--nav-main-color) !important;
     font-size: 14px;
     margin: 0 auto !important;
     box-shadow: var(--box-shadow);
-    scrollbar-color: transparent transparent;
+    scrollbar-color: var(--h2-main-color) transparent;
     background: white;
-
-    &:hover {
-        scrollbar-color: var(--h2-main-color) transparent;
-    }
 
     .horaire {
         padding: 0;
         margin: 0;
         text-align: center;
         border: none;
-        border-right: 1px solid var(--nav-main-color);
-        background: #f6fbff;
+        border-right: 1px solid #b6b6b6;
+        background: #ffffff;
 
         a {
             text-decoration: none;
@@ -30,12 +25,11 @@
 
         p {
             margin: 0;
-            padding: 1em .5em;
+            padding: .3em .5em;
             background: var(--horaire-background);
-            color: var(--nav-color);
+            color: black;
             font-size: 1em;
             font-weight: bold;
-            text-shadow: 0 0 2px black;
         }
 
         &:last-child {
@@ -86,7 +80,6 @@
 
     .passed {
         background: #d8d8d8;
-        border-right: 1px solid #b1b1b1;
 
         p {
             background: var(--horaire-passed);
@@ -94,7 +87,7 @@
     }
 
     .now {
-        background: #ddffdd;
+        background: #e9ffe9;
 
         p {
             background: var(--horaire-now);
@@ -113,13 +106,21 @@
     display: grid;
     grid-template-columns: repeat(19, 1fr);
     font-size: 12px;
-    margin-bottom: 1em !important;
-    padding-bottom: 10px !important;
+    margin: .5em !important;
+    width: calc(100% - 1em);
+
+    .horaire {
+        border: none;
+    }
 
     .calendar-technicien {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         p {
             margin: 0;
-            padding: 1em .5em;
+            padding: .3em .5em;
             font-size: 1em;
             font-weight: bold;
             text-align: center;
@@ -127,12 +128,12 @@
     }
 
     .vacant {
-        width: 80%;
-        height: 80%;
-        margin: auto;
-        background: #e8e8e8;
+        width: calc(90% - 2px);
+        aspect-ratio: 1;
+        margin: 5px 2px;
+        background: #efefef;
         border-radius: 5px;
-        border: 2px dotted #b1b1b1;
+        border: 1px dotted #b1b1b1;
         position: relative;
     }
 
@@ -199,8 +200,6 @@
         }
     }
 }
-
-
 
 .info-rdv {
     cursor: pointer;

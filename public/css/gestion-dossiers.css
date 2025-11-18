@@ -1,21 +1,21 @@
 .main-container {
     font-size: 14px;
-    border: 1px solid var(--h2-main-color);
     border-radius: 10px;
     overflow: hidden;
-    background: #f6fbff;
+    background: #f3f3f3;
     box-shadow: var(--box-shadow);
 
     ul {
         list-style: none;
         padding: 0;
+        margin: 0;
 
         li {
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid #ccc;
-            padding: 10px 0 2px 0;
+            padding: 5px 0 2px 0;
 
             .valid, .not-valid {
                 font-style: italic;
@@ -37,7 +37,7 @@
     align-items: flex-start;
     justify-content: center;
     gap: 10px;
-    margin: 20px auto;
+    margin: 10px auto 0 auto;
 }
 
 .info-bar {
@@ -50,18 +50,28 @@
 
 .container, .planning-container {
     h2 {
-        text-align: center;
-        background: var(--h2);
-        color: #13243c;
+        text-align: left;
+        background: #eff9ff;
+        color: #66abff;
         margin: 0;
-        padding: .5em;
+        padding: 5px 20px;
         position: relative;
-        font-size: 1.1em;
-        transition: all .5s ease-in;
+        font-size: 1.3em;
+        text-transform: uppercase;
+
+        &.h2-hide {
+            cursor: pointer;
+            transition-property: background, color;
+            transition: all .5s ease-in, filter 0s;
+
+            &:hover {
+                filter: brightness(0.7) saturate(4) contrast(2);
+            }
+        }
 
         &.closed {
-            filter: grayscale(1) brightness(120%);
-            color: #434343;
+            background: #cfcfcf;
+            color: #656565;
             text-shadow: none;
         }
 
@@ -71,11 +81,15 @@
             right: 10px;
             width: 20px;
             height: 20px;
-            border-radius: 0;
-            background: lightgrey;
+            border-radius: 5px;
+            background: white;
             margin: 0;
             padding: 0;
             color: black;
+
+            &:hover {
+                background: #62abff;
+            }
         }
     }
 
@@ -88,11 +102,12 @@
         height: fit-content;
         color: var(--color);
         background: var(--dossier-containers-color);
-        border: 1px solid #9ec2db;
         border-radius: 10px;
+        border: 1px solid lightgray;
         margin-bottom: 10px;
         overflow: hidden;
         position: relative;
+        box-shadow: var(--box-shadow);
 
         .traitement-content {
             padding: 0 1em;
@@ -101,7 +116,7 @@
         }
 
         .content {
-            padding: 0 1em;
+            padding: 0 .5em;
             overflow: hidden;
             transition: max-height .5s ease-in;
 
@@ -109,7 +124,7 @@
                 border-radius: 5px;
                 width: fit-content;
                 height: 30px;
-                border: 1px solid #6e89b9;
+                border: 1px solid #dcdcdc;
             }
 
             input {
@@ -133,6 +148,11 @@
                 display: flex;
                 align-items: center;
             }
+
+            article {
+                margin: .5em 0;
+                box-shadow: none;
+            }
         }
     }
 
@@ -140,14 +160,14 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 10px 0;
+        margin: .5em 0;
     }
 }
 
 .planning-container {
     width: calc(35% - 20px);
 
-    h3 {
+    h2 {
         position: relative;
 
         .btn-map {
@@ -201,7 +221,8 @@
                 align-items: center;
                 justify-content: space-between;
                 gap: 10px;
-                padding: 1em 0;
+                padding: .2em 0;
+                margin: 0;
 
                 label {
                     width: fit-content;
@@ -256,27 +277,41 @@ input {
 fieldset {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    margin: 5px 0;
-    border-radius: 5px;
-    border: 1px solid #c9dbe0;
+    border: none;
+    padding: 0;
 
     .checkBtn {
         display: flex;
         align-items: center;
-        border: 1px solid #b2d8f3;
         margin: 2px;
-        padding: .5em;
+        padding: .1em .3em;
         border-radius: 5px;
         gap: 5px;
+        border: 1px solid lightgrey;
 
-        label {
+        label, input {
             text-align: left;
+            cursor: pointer;
         }
     }
 
     .important {
         color: red;
         font-style: italic;
+    }
+
+    &.client {
+        display: flex;
+        flex-direction: column;
+
+        label {
+            width: 70px !important;
+            text-align: left;
+        }
+
+        input {
+            width: calc(100% - 70px) !important;
+        }
     }
 }
 
@@ -305,6 +340,15 @@ textarea {
     border: 1px solid black;
     display: block;
     margin: 10px auto;
+}
+
+.btn-map {
+    background: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+        background: none !important;
+    }
 }
 
 @media screen and (max-width: 1280px) {

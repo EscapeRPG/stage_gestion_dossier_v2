@@ -7,10 +7,11 @@
     --contrast-color: #68b8f6;
     --nav-color: white;
     --nav-color-hover: #005a97;
-    --main-color: #f1f1f1;
+    --main-color: #e8e8e8;
     --color: black;
     --readonly-color: #373737;
     --h1-color: #5d96d1;
+    /*
     --horaire-background: linear-gradient(#6395da 5%, #71b4e6 70%, #4572af);
     --sidebar: linear-gradient(#3e679f 5%, #507bb4 70%, #33588c);
     --horaire-passed: linear-gradient(#818181 5%, #8f8f8f 70%, #676767);
@@ -18,7 +19,15 @@
     --time-slot: linear-gradient(#bee0ff 5%, #e3f4ff 70%, #b8dfff);
     --selected: linear-gradient(#df9c43 5%, #f1b247 70%, #c37a1b);
     --h2: radial-gradient(#a7d8f8 20%, #74b1e1 60%, #325178);
-    --box-shadow: 2px 2px 5px rgba(44, 113, 163, .8);
+    */
+    --horaire-background: #cce6ff;
+    --sidebar: #555555;
+    --horaire-passed: #b6b6b6;
+    --horaire-now: #beffd0;
+    --time-slot: #dadada;
+    --selected: #ffd398;
+    --h2: #a7d8f8;
+    --box-shadow: 2px 2px 5px rgba(111, 129, 140, 0.5);
     --calendar-sidebar: #5d96d1;
     --h2-main-color: #5ba2d1;
     --calendar-color-hover: #8fd8ff;

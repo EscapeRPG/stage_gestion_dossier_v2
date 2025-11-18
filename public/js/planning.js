@@ -40,7 +40,11 @@ export function initPlanning() {
             article.className = 'detail-event';
 
             const h2 = document.createElement('h2');
-            h2.textContent = `Tâches du dossier #${item.NumInt} à ${heure}`;
+            if (item.type === 'rdv') {
+                h2.textContent = `Rendez-vous #${item.NumInt} à ${heure}`;
+            } else {
+                h2.textContent = `Tâches #${item.NumInt} à ${heure}`;
+            }
 
             const div = document.createElement('div');
             div.className = 'content';
@@ -132,8 +136,8 @@ export function initPlanning() {
                 day: 'numeric', month: 'long', year: 'numeric'
             }).format(new Date(date));
 
-            const h3 = document.createElement('h3');
-            h3.textContent = `Journée du ${formattedDate}`;
+            const h3 = document.getElementById('day-date');
+            h3.textContent = formattedDate;
 
             let dayRdv = false;
             data.forEach(item => {
@@ -159,14 +163,12 @@ export function initPlanning() {
                 });
                 h3.appendChild(mapBtn);
             }
-            infosDiv.appendChild(h3);
 
             const calendar = document.createElement('div');
             calendar.className = 'planning-calendar';
 
             const div = document.createElement('div');
             div.className = 'calendar-technicien';
-            div.innerHTML = '<p>Tech</p>';
             calendar.appendChild(div);
 
             for (let i = 9; i < 18; i++) {

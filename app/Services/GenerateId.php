@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-class generateId
+class GenerateId
 {
     public function generateID(): string
     {

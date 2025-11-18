@@ -5,10 +5,12 @@ form {
         text-align: center;
     }
 
-    input, select {
+    input:not([type=checkbox]), select {
         padding: 1em .5em;
         border-radius: 10px;
         background: white;
+        border: none;
+        box-shadow: var(--box-shadow);
     }
 
     select:focus {
@@ -21,20 +23,18 @@ form {
 
     button {
         width: fit-content;
-        margin: 20px auto;
+        margin: 10px;
         padding: 1em 2em;
         border-radius: 10px;
-        background: var(--horaire-background);
-        border: var(--button-border);
-        color: white;
-        text-shadow: 0 0 2px black;
+        background: #cce6ff;
+        border: none;
         font-weight: bold;
+        box-shadow: var(--box-shadow);
 
         &:hover {
             cursor: pointer;
             background: var(--button-main-color-hover);
             color: var(--button-color-hover);
-            text-shadow: none;
         }
     }
 
@@ -70,6 +70,14 @@ form {
         display: flex;
         flex-direction: column;
     }
+
+    input {
+        outline: 1px solid grey;
+    }
+
+    button {
+        margin: auto;
+    }
 }
 
 .dossier-detail-form {
@@ -78,12 +86,10 @@ form {
 
     .save-btn {
     background: var(--horaire-now);
-    color: white;
     margin: 10px auto;
 
     &:hover {
         filter: brightness(0.8) contrast(1.6);
-        text-shadow: 0 0 2px black;
     }
 }
 }

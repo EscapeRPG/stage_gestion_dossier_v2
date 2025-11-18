@@ -1,31 +1,31 @@
 <article>
-    <h2>
-        #{{ $intervention->NumInt }} - Traitement
-        <button type="button" id="traitement-btn">-</button>
+    <h2 id="traitement-btn" class="h2-hide">
+        #{{ $intervention->NumInt }}
     </h2>
 
     <div class="content traitement show" id="traitement">
         <article>
-            <h2>
+            <h2 id="etat-btn" class="h2-hide">
                 État
-                <button type="button" id="etat-btn">-</button>
             </h2>
 
             <div class="traitement-content show" id="etat">
-                <div class="detail-etat">
-                    <label for="nomCli">Client</label>
-                    <input type="text" name="nomCli" id="nomCli" value="{{ $intervention->Nom_Cli }}">
-                </div>
+                <fieldset class="client">
+                    <div class="detail-etat">
+                        <label for="nomCli">Client</label>
+                        <input type="text" name="nomCli" id="nomCli" value="{{ $intervention->Nom_Cli }}">
+                    </div>
 
-                <div class="detail-etat">
-                    <label for="marque">Marque</label>
-                    <input type="text" name="marque" id="marque" placeholder="{{ $intervention->Marque }}">
-                </div>
+                    <div class="detail-etat">
+                        <label for="marque">Marque</label>
+                        <input type="text" name="marque" id="marque" placeholder="{{ $intervention->Marque }}">
+                    </div>
 
-                <div class="detail-etat">
-                    <label for="appareil">Type</label>
-                    <input type="text" name="appareil" id="appareil" placeholder="{{ $intervention->Type_App }}">
-                </div>
+                    <div class="detail-etat">
+                        <label for="appareil">Type</label>
+                        <input type="text" name="appareil" id="appareil" placeholder="{{ $intervention->Type_App }}">
+                    </div>
+                </fieldset>
 
                 <fieldset>
                     @foreach($intervention->questions as $question)
@@ -50,9 +50,8 @@
         </article>
 
         <article>
-            <h2>
+            <h2 id="a-faire-btn" class="h2-hide">
                 À faire
-                <button type="button" id="a-faire-btn">-</button>
             </h2>
 
             <div class="traitement-content show" id="a-faire">

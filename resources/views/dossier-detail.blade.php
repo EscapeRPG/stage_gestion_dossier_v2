@@ -24,8 +24,8 @@
 
                 <div class="dossier-detail-container">
                     <div class="container">
-                        @include('includes.historique')
                         @include('includes.etat-int', ['intervention' => $intervention])
+                        @include('includes.historique')
                         @include('includes.commentaires-int')
                     </div>
                     <div class="planning-container">
@@ -33,13 +33,13 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="numInt" id="numInt" value="{{ $intervention->NumInt }}">
                 <button class="save-btn" id="save-btn">
                     Enregistrer le dossier
                 </button>
                 <button type="button" id="return" data-location="/ClientInfo?id={{ session('user')->idUser }}&action=suivi-dossiers">
                     Retour
                 </button>
+                <input type="hidden" name="numInt" id="numInt" value="{{ $intervention->NumInt }}">
             </form>
         </div>
     </main>

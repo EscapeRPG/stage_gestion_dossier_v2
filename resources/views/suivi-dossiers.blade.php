@@ -20,10 +20,7 @@
         @endif
 
         <div class="planning-day">
-            <h2>Planning</h2>
-
             @include('includes.timeline-today', ['timelineToday' => $timelineToday])
-            {{-- @include('includes.timeline-to-come') --}}
             @include('includes.upcoming-todos')
         </div>
     </main>

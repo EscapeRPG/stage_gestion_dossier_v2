@@ -4,10 +4,9 @@
         <th>Numéro de dossier</th>
         <th>Client</th>
         <th>Technicien</th>
-        <th>Date / Heure</th>
-        <th>À Faire</th>
+        <th>À faire le</th>
+        <th>Tâches</th>
         <th>Rendez-vous</th>
-        <th></th>
     </tr>
     </thead>
 
@@ -33,16 +32,10 @@
             </td>
 
             <td style="text-align: left">
-                <strong>{{ $dossier->Nom_Cli }}</strong><br>
-                <div class="adresse">
-                    <i class="fas fa-map-marker-alt"></i>
-                    {{ $dossier->Adresse_Cli }} - {{ $dossier->CP_Cli }} {{ $dossier->Ville_Cli }}
-                    <br>
-                    <i class="fas fa-phone-alt"></i> {{ $dossier->Num_Tel_Cli }}
-                    -
-                    <i class="fas fa-envelope"></i>
-                    <a href="mailto:{{ $dossier->Mail_Cli }}">{{ $dossier->Mail_Cli }}</a>
-                </div>
+                <strong>{{ $dossier->Nom_Cli }}</strong>
+                <span class="adresse">
+                    {{ $dossier->Marque }} - {{ $dossier->Type_App }}
+                </span>
             </td>
 
             <td>
@@ -104,12 +97,6 @@
                         </div>
                     @endforeach
                 </div>
-            </td>
-
-            <td>
-                <a href="/ClientInfo?id={{ session('user')->idUser }}&action=detail-dossier&numInt={{ $dossier->NumInt }}">
-                    <span class="info-rdv">i</span>
-                </a>
             </td>
         </tr>
     @endforeach

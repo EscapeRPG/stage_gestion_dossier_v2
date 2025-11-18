@@ -1,10 +1,9 @@
 <article>
-    <h2 class="closed">
+    <h2 class="closed h2-hide" id="comment-btn">
         Commentaires
-        <button type="button" id="comment-btn">+</button>
     </h2>
 
-    <div class="content" id="commentaire">
+    <div class="content panel" id="commentaire">
         <div class="commentaire-histo">
             <label for="commentaire-histo">Objet :</label>
             <input type="text" name="commentaire-histo" id="commentaire-histo"

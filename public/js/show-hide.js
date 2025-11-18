@@ -20,6 +20,10 @@ window.onload = () => showPanels();
 window.onresize = () => showPanels();
 
 function showPanels() {
+    document.querySelectorAll(".panel").forEach((panel) => {
+        panel.style.maxHeight = '0px';
+    });
+
     document.querySelectorAll(".show").forEach((panel) => {
         panel.style.transition = 'none';
         panel.style.maxHeight = panel.scrollHeight + 'px';
@@ -34,73 +38,63 @@ function showPanels() {
 }
 
 function showHisto() {
-    if (histoBtn.textContent === "-") {
-        histoBtn.textContent = "+";
+    if (histoPanel.style.maxHeight !== '0px') {
         histoPanel.style.maxHeight = '0px';
-        histoPanel.parentNode.querySelector('h2').className = 'closed';
+        histoPanel.parentNode.querySelector('h2').classList.add('closed');
         histoPanel.classList.remove("show");
     } else {
-        histoBtn.textContent = "-";
         histoPanel.style.maxHeight = histoPanel.scrollHeight + 'px';
-        histoPanel.parentNode.querySelector('h2').className = '';
+        histoPanel.parentNode.querySelector('h2').classList.remove('closed');
         histoPanel.classList.add("show");
     }
 }
 
 function showTraitement() {
-    if (traitementBtn.textContent === "-") {
-        traitementBtn.textContent = "+";
+    if (traitementPanel.style.maxHeight !== '0px') {
         traitementPanel.style.maxHeight = '0px';
-        traitementPanel.parentNode.querySelector('h2').className = 'closed';
+        traitementPanel.parentNode.querySelector('h2').classList.add('closed');
         traitementPanel.classList.remove("show");
     } else {
-        traitementBtn.textContent = "-";
         traitementPanel.style.maxHeight = traitementPanel.scrollHeight + 'px';
-        traitementPanel.parentNode.querySelector('h2').className = '';
+        traitementPanel.parentNode.querySelector('h2').classList.remove('closed');
         traitementPanel.classList.add("show");
     }
 }
 
 function showEtat() {
-    if (etatBtn.textContent === "-") {
-        etatBtn.textContent = "+";
+    if (etatPanel.style.maxHeight !== '0px') {
         etatPanel.style.maxHeight = '0px';
-        etatPanel.parentNode.querySelector('h2').className = 'closed';
+        etatPanel.parentNode.querySelector('h2').classList.add('closed');
         etatPanel.classList.remove("show");
     } else {
-        etatBtn.textContent = "-";
         etatPanel.style.maxHeight = etatPanel.scrollHeight + 'px';
         etatPanel.classList.add("show");
-        etatPanel.parentNode.querySelector('h2').className = '';
+        etatPanel.parentNode.querySelector('h2').classList.remove('closed');
         setTimeout(() => traitementPanel.style.maxHeight = traitementPanel.scrollHeight + 'px', 501);
     }
 }
 
 function showAFaire() {
-    if (aFaireBtn.textContent === "-") {
-        aFaireBtn.textContent = "+";
+    if (aFairePanel.style.maxHeight !== '0px') {
         aFairePanel.style.maxHeight = '0px';
-        aFairePanel.parentNode.querySelector('h2').className = 'closed';
+        aFairePanel.parentNode.querySelector('h2').classList.add('closed');
         aFairePanel.classList.remove("show");
     } else {
-        aFaireBtn.textContent = "-";
         aFairePanel.style.maxHeight = aFairePanel.scrollHeight + 'px';
         aFairePanel.classList.add("show");
-        aFairePanel.parentNode.querySelector('h2').className = '';
+        aFairePanel.parentNode.querySelector('h2').classList.remove('closed');
         setTimeout(() => traitementPanel.style.maxHeight = traitementPanel.scrollHeight + 'px', 501);
     }
 }
 
 function showComment() {
-    if (commentBtn.textContent === "-") {
-        commentBtn.textContent = "+";
+    if (commentPanel.style.maxHeight !== '0px') {
         commentPanel.style.maxHeight = '0px';
-        commentPanel.parentNode.querySelector('h2').className = 'closed';
+        commentPanel.parentNode.querySelector('h2').classList.add('closed');
         commentPanel.classList.remove("show");
     } else {
-        commentBtn.textContent = "-";
         commentPanel.style.maxHeight = commentPanel.scrollHeight + 'px';
-        commentPanel.parentNode.querySelector('h2').className = '';
+        commentPanel.parentNode.querySelector('h2').classList.remove('closed');
         commentPanel.classList.add("show");
     }
 }

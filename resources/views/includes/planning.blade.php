@@ -61,7 +61,7 @@
 </article>
 
 <article>
-    <h2>Planning</h2>
+    <h2 id="day-date">Planning</h2>
 
     <div class="content" id="day-info">
         <p>Sélectionnez un jour pour voir les informations.</p>

@@ -1,5 +1,3 @@
-<h3>Aujourd'hui</h3>
-
 @php
     $now = now()->minute < 30
         ? now()->setTime(now()->hour, 0)

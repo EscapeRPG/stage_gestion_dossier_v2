@@ -19,7 +19,6 @@
     justify-content: center;
     gap: 10px;
     padding: 5px 0;
-    text-shadow: 0 0 2px black;
 
     button {
         background: none;
@@ -75,11 +74,13 @@
     text-align: center;
     padding: 10px 5px;
     border: none;
-    background: var(--horaire-background);
-    border-right: 1px solid var(--nav-color);
-    color: var(--nav-color);
-    text-shadow: 0 0 2px black;
+    background: #fff;
+    border-right: 1px solid #b6b6b6;
     cursor: pointer;
+
+    &:hover {
+        filter: brightness(.8) contrast(120%);
+    }
 
     &:last-child {
         border: none;
@@ -100,18 +101,14 @@
         font-size: 1.5em;
         font-weight: bold;
     }
-
-    &:hover {
-        filter: brightness(1.1) contrast(120%);
-    }
 }
 
 .time-slots {
     display: grid;
     grid-template-columns: repeat(18, 1fr);
     height: 25px;
-    border-top: 1px solid var(--h2-main-color);
-    border-bottom: 1px solid var(--h2-main-color);
+    border-top: 1px solid #b6b6b6;
+    border-bottom: 1px solid #b6b6b6;
 }
 
 .time-slot {
